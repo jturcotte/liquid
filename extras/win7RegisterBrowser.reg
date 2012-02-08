@@ -1,0 +1,54 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\LiquidHTML]
+"URL Protocol"=""
+@="liquid HTML Document"
+
+[HKEY_CLASSES_ROOT\LiquidHTML\DefaultIcon]
+@=C:\\dev\\liquid\\liquid.exe,0"
+
+[HKEY_CLASSES_ROOT\LiquidHTML\shell]
+
+[HKEY_CLASSES_ROOT\LiquidHTML\shell\open]
+
+[HKEY_CLASSES_ROOT\LiquidHTML\shell\open\command]
+@="\"C:\\dev\\liquid\\liquid.exe\" \"%1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid]
+@="liquid"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid\Capabilities]
+"ApplicationDescription"="liquid browser"
+"ApplicationIcon"="C:\\dev\\liquid\\liquid.exe,0"
+"ApplicationName"="liquid"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid\Capabilities\FileAssociations]
+".htm"="LiquidHTML"
+".html"="LiquidHTML"
+".shtml"="LiquidHTML"
+".xht"="LiquidHTML"
+".xhtml"="LiquidHTML"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid\Capabilities\StartMenu]
+"StartMenuInternet"="liquid"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid\Capabilities\URLAssociations]
+"ftp"="LiquidHTML"
+"http"="LiquidHTML"
+"https"="LiquidHTML"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid\DefaultIcon]
+@="C:\\dev\\liquid\\liquid.exe,0"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid\InstallInfo]
+"IconsVisible"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid\shell]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid\shell\open]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet\liquid\shell\open\command]
+@="C:\\dev\\liquid\\liquid.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications]
+"liquid"="Software\\Clients\\StartMenuInternet\\liquid\\Capabilities"
