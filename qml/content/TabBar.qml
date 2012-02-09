@@ -29,39 +29,6 @@ TopTabsLayout {
     minimizedWidth: 22
     expandedWidth: 300
 
-    BorderImage {
-        id: tabsScrollBar
-        property double scrollPos: 0;
-        property double size: 1 - tabBar.zoomAmount;
-
-        anchors.bottom: parent.bottom
-        height: 5
-        visible: size < 1
-        source: "pics/scrollbar.png"
-        border { left: 15; right: 15; top: 0; bottom: 0 }
-        horizontalTileMode: BorderImage.Repeat
-
-        function updateGeometry() {
-            width = (parent.width - 50) * size + 50;
-            x = (parent.width - width) * scrollPos;
-        }
-        onSizeChanged: { updateGeometry(); }
-        onScrollPosChanged: {
-            updateGeometry();
-            tabBar.zoomPos = scrollPos;
-        }
-        MouseArea {
-            anchors.fill: parent
-            drag.target: tabsScrollBar
-            drag.axis: Drag.XAxis
-            drag.minimumX: 0
-            drag.maximumX: tabsScrollBar.parent.width - tabsScrollBar.width
-            onMousePositionChanged: {
-                tabsScrollBar.scrollPos = tabsScrollBar.x / (tabsScrollBar.parent.width - tabsScrollBar.width);
-            }
-        }
-    }
-
     model: backend.tabManager.tabs
     delegate: Item {
         id: tabDelegate
