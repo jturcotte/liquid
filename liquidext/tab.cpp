@@ -109,7 +109,6 @@ WebView* Tab::webView()
         // The web view might get deleted when reloading in QmlViewer.
         connect(m_webView, SIGNAL(destroyed()), SLOT(webViewDestroyed()));
         connect(m_webPage->mainFrame(), SIGNAL(urlChanged(const QUrl&)), SLOT(onNavigation()));
-        emit baseWeightChanged();
         emit closedChanged();
     }
 #else
@@ -123,7 +122,6 @@ WebView* Tab::webView()
         connect(m_webView, SIGNAL(loadFinished()), SLOT(updateHistory()));
         // The web view might get deleted when reloading in QmlViewer.
         connect(m_webView, SIGNAL(destroyed()), SLOT(webViewDestroyed()));
-        emit baseWeightChanged();
         emit closedChanged();
     }
 #endif
@@ -143,7 +141,7 @@ QUrl Tab::iconSource() const
 
 double Tab::baseWeight()
 {
-    return !m_webView ? 0.0 : 0.05 + m_manager->tabStats()->valueForTab(this);
+    return m_manager->tabStats()->valueForTab(this);
 }
 
 void Tab::loadUrl(const QUrl& url, const QString& typedText)
@@ -161,7 +159,6 @@ void Tab::close()
         delete m_webPage;
         m_webView = 0;
         m_webPage = 0;
-        emit baseWeightChanged();
         emit closedChanged();
     }
     m_manager->onTabClosed(this);

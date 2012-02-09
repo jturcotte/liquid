@@ -47,6 +47,12 @@ public:
         QList<QObject*>::append(t);
         endInsertRows();
     }
+    void removeAt(int i)
+    {
+        beginRemoveRows(QModelIndex(), i, i);
+        QList<QObject*>::removeAt(i);
+        endRemoveRows();
+    }
 };
 
 #endif

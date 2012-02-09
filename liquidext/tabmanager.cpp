@@ -21,8 +21,12 @@
 
 #include "backend.h"
 #include "historyitem.h"
+#include <cfloat>
 #include <cmath>
 #include <QtDeclarative/qdeclarativeengine.h>
+
+static const int aliveTabsLimit = 30;
+static const int closedTabsLimit = 5;
 
 TabsImageProvider::TabsImageProvider(TabManager* tabManager)
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
@@ -110,6 +114,25 @@ void TabManager::onTabClosed(Tab* tab)
     m_lastCurrentTabs.removeAll(tab);
     if (wasCurrentTab)
         emit currentTabChanged();
+
+    // Check if we passed the limit of closed tabs.
+    double cheapestWeight = DBL_MAX;
+    int cheapestClosedTabIndex = -1;
+    int numClosedTabs = 0;
+    for (int i = 0; i < m_tabs.size(); ++i) {
+        Tab* tab = static_cast<Tab*>(m_tabs.at(i));
+        if (tab->closed()) {
+            ++numClosedTabs;
+            if (tab->baseWeight() < cheapestWeight) {
+                cheapestWeight = tab->baseWeight();
+                cheapestClosedTabIndex = i;
+            }
+        }
+    }
+    if (numClosedTabs > closedTabsLimit && cheapestClosedTabIndex != -1) {
+        Q_ASSERT(numClosedTabs == closedTabsLimit + 1);
+        m_tabs.removeAt(cheapestClosedTabIndex);
+    }
 }
 
 void TabManager::initializeEngine(QDeclarativeEngine *engine)
@@ -120,7 +143,27 @@ void TabManager::initializeEngine(QDeclarativeEngine *engine)
 
 Tab* TabManager::addNewTab(QUrl url)
 {
-    Tab* newTab = new Tab(url, m_tabs.size(), this);
+    int newTabIndex = m_tabs.isEmpty() ? 0 : static_cast<Tab*>(m_tabs.last())->index() + 1;
+    Tab* newTab = new Tab(url, newTabIndex, this);
     m_tabs.append(newTab);
+
+    // Check if we passed the limit of tabs.
+    double cheapestWeight = DBL_MAX;
+    Tab* cheapestTab = 0;
+    int numAliveTabs = 0;
+    for (int i = 0; i < m_tabs.size(); ++i) {
+        Tab* tab = static_cast<Tab*>(m_tabs.at(i));
+        if (!tab->closed()) {
+            ++numAliveTabs;
+            if (tab->baseWeight() < cheapestWeight) {
+                cheapestWeight = tab->baseWeight();
+                cheapestTab = tab;
+            }
+        }
+    }
+    if (numAliveTabs > aliveTabsLimit && cheapestTab) {
+        Q_ASSERT(numAliveTabs == aliveTabsLimit + 1);
+        cheapestTab->close();
+    }
     return newTab;
 }
