@@ -98,7 +98,12 @@ DeckLayout {
             }
             var hitTest = container.childAt(mouseX, mouseY);
             toolTipPos = Qt.point(mouseX, mouseY);
-            toolTipText = hitTest && hitTest.title ? hitTest.title : "";
+            if (hitTest && hitTest.title)
+                toolTipText = hitTest.title;
+            else if (hitTest && hitTest.title === "")
+                toolTipText = "[No title]";
+            else
+                toolTipText = "";
         }
         onExited: toolTipText = ""
     }

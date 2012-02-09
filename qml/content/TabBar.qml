@@ -20,7 +20,9 @@
 import QtQuick 1.1
 
 TopTabsLayout {
-    id: tabBar
+    id: container
+    property string toolTipText
+    property variant toolTipPos
 
     itemOverlap: 16
     minimizedItemOverlap: 12
@@ -38,6 +40,7 @@ TopTabsLayout {
         property int tabIndex: modelObject.index
         property int targetX: 0
         property bool inInitialAnim: false;
+        property string title: modelObject.title
         width: expandedWidth
         height: parent.height + 2
         x: targetX
@@ -117,5 +120,23 @@ TopTabsLayout {
                 PropertyAction { property: "inInitialAnim" }
             }
         } ]
+    }
+    MouseArea {
+        // Make sure the mouse area is under the rest so that it doesn't get returned by parent.childAt.
+        z: -1
+        acceptedButtons: Qt.NoButton
+        hoverEnabled: true
+        anchors.fill: container
+        onPositionChanged: {
+            var hitTest = container.childAt(mouseX, mouseY);
+            toolTipPos = Qt.point(mouseX, mouseY);
+            if (hitTest && hitTest.title)
+                toolTipText = hitTest.title;
+            else if (hitTest && hitTest.title === "")
+                toolTipText = "[No title]";
+            else
+                toolTipText = "";
+        }
+        onExited: toolTipText = ""
     }
 }

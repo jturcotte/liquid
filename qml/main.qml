@@ -98,6 +98,7 @@ Rectangle {
                     anchors.rightMargin: -(newTabButton.width-10)
                     clip: true
                     TabBar {
+                        id: tabBar
                         anchors.fill: parent
                         anchors.rightMargin: -parent.anchors.rightMargin
                     }
@@ -169,7 +170,10 @@ Rectangle {
     }
 
     ToolTip {
-        sourceItem: historyBar.toolTipText ? historyBar : backend.tabManager.currentTab && backend.tabManager.currentTab.webView.toolTipText ? backend.tabManager.currentTab.webView : null
+        sourceItem: tabBar.toolTipText ? tabBar
+            : historyBar.toolTipText ? historyBar
+            : backend.tabManager.currentTab && backend.tabManager.currentTab.webView.toolTipText ? backend.tabManager.currentTab.webView
+            : null
     }
 
     AuthDialog {
