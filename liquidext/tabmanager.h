@@ -70,7 +70,7 @@ public:
     TabStats* tabStats() { return &m_tabStats; }
     QDeclarativeEngine* engine() const { return m_engine; }
     void setCurrentTab(Tab* tab);
-    Q_INVOKABLE Tab* addNewTab(Tab* parentTab = 0, QUrl url = QUrl("about:blank"));
+    Q_INVOKABLE Tab* addNewTab(Tab* parentTab = 0, QUrl url = QUrl());
     Q_INVOKABLE void showNextTab();
     Q_INVOKABLE void showPreviousTab();
     void onTabClosed(Tab* tab);
