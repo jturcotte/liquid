@@ -1,0 +1,13 @@
+# Sample desktop file for development to set as default browser on linux.
+# Copy to .local/share/applications/ and then set liquid.desktop as default in mimeapps.list.
+[Desktop Entry]
+Version=1.0
+Name=liquid
+GenericName=Web Browser
+Comment=Access the Internet
+Exec=/home/jturcott/dev/liquid/liquid %U
+Terminal=false
+#Icon=
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml_xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
