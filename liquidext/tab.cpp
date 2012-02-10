@@ -178,7 +178,8 @@ void Tab::updateHistory()
         static_cast<HistoryItem*>(m_history.at(i))->checkRelativeIndex();
     if (shouldEmit)
         emit historyChanged();
-    m_currentHistoryItem = static_cast<HistoryItem*>(m_history.at(m_webView->history()->currentItemIndex()));
+    if (m_webView->history()->currentItemIndex() < m_history.size())
+        m_currentHistoryItem = static_cast<HistoryItem*>(m_history.at(m_webView->history()->currentItemIndex()));
 }
 
 void Tab::updateTitle()
