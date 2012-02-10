@@ -41,10 +41,10 @@ public:
     {
         return size();
     }
-    void append(QObject* t)
+    void insert(int i, QObject* t)
     {
-        beginInsertRows(QModelIndex(), size(), size());
-        QList<QObject*>::append(t);
+        beginInsertRows(QModelIndex(), i, i);
+        QList<QObject*>::insert(i, t);
         endInsertRows();
     }
     void removeAt(int i)

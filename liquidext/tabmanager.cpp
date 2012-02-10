@@ -141,11 +141,23 @@ void TabManager::initializeEngine(QDeclarativeEngine *engine)
     m_engine = engine;
 }
 
-Tab* TabManager::addNewTab(QUrl url)
+Tab* TabManager::addNewTab(Tab* parentTab, QUrl url)
 {
-    int newTabIndex = m_tabs.isEmpty() ? 0 : static_cast<Tab*>(m_tabs.last())->index() + 1;
+    int newTabPos = m_tabs.size();
+    double newTabIndex = 0;
+
+    if (parentTab) {
+        int parentTabPos = m_tabs.indexOf(parentTab);
+        newTabPos = parentTabPos + 1;
+        if (parentTabPos + 1 != m_tabs.size())
+            newTabIndex = (parentTab->index() + static_cast<Tab*>(m_tabs.at(parentTabPos+1))->index()) / 2;
+        else
+            newTabIndex = parentTab->index() + 1;
+    } else if (!m_tabs.isEmpty())
+        newTabIndex = static_cast<Tab*>(m_tabs.last())->index() + 1;
+
     Tab* newTab = new Tab(url, newTabIndex, this);
-    m_tabs.append(newTab);
+    m_tabs.insert(newTabPos, newTab);
 
     // Check if we passed the limit of tabs.
     double cheapestWeight = DBL_MAX;

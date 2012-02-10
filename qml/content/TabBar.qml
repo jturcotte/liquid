@@ -37,7 +37,7 @@ TopTabsLayout {
         property bool layouted: visible
         property bool minimized: modelObject.closed
         property double baseWeight: modelObject.baseWeight
-        property int tabIndex: modelObject.index
+        property double tabIndex: modelObject.index
         property int targetX: 0
         property bool inInitialAnim: false;
         property string title: modelObject.title

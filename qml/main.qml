@@ -25,7 +25,7 @@ import "content/ShortcutHandler.js" as ShortcutHandler
 
 Rectangle {
     function addNewTab(url) {
-        backend.tabManager.currentTab = backend.tabManager.addNewTab(url)
+        backend.tabManager.currentTab = backend.tabManager.addNewTab(0, url)
     }
     function addNewEmptyTab() {
         backend.tabManager.currentTab = backend.tabManager.addNewTab()

@@ -37,16 +37,16 @@ QWKPage* createNewPageFunc(QWKPage*)
 }
 
 #else
-WebPage::WebPage(TabManager* tabManager)
-: m_tabManager(tabManager)
+WebPage::WebPage(Tab* tab)
+: m_tab(tab)
 {
 }
 
 QWebPage* WebPage::createWindow(WebWindowType)
 {
-    Tab* tab = m_tabManager->addNewTab();
-    m_tabManager->setCurrentTab(tab);
-    return tab->webView()->page();
+    Tab* newTab = m_tab->manager()->addNewTab(m_tab);
+    m_tab->manager()->setCurrentTab(newTab);
+    return newTab->webView()->page();
 }
 
 bool WebPage::supportsExtension(QWebPage::Extension extension) const
@@ -65,7 +65,7 @@ bool WebPage::extension(Extension, const ExtensionOption* option, ExtensionRetur
 #endif
 
 
-Tab::Tab(const QUrl& url, int index, TabManager* manager, QObject* parent)
+Tab::Tab(const QUrl& url, double index, TabManager* manager, QObject* parent)
     : QObject(parent)
     , m_pendingUrl(url)
     , m_index(index)
@@ -92,7 +92,7 @@ WebView* Tab::webView()
 #ifndef WK2_BUILD
     // We manage the page's lifetime,
     if (!m_webPage) {
-        m_webPage = new WebPage(m_manager);
+        m_webPage = new WebPage(this);
         m_webPage->setNetworkAccessManager(m_manager->engine()->networkAccessManager());
     }
     if (!m_webView) {

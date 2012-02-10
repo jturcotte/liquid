@@ -70,6 +70,7 @@ public:
     TabStats* tabStats() { return &m_tabStats; }
     QDeclarativeEngine* engine() const { return m_engine; }
     void setCurrentTab(Tab* tab);
+    Q_INVOKABLE Tab* addNewTab(Tab* parentTab = 0, QUrl url = QUrl("about:blank"));
     Q_INVOKABLE void showNextTab();
     Q_INVOKABLE void showPreviousTab();
     void onTabClosed(Tab* tab);
@@ -78,9 +79,6 @@ public:
 #ifdef WK2_BUILD
     QWKContext* webContext() const { return m_webContext; }
 #endif
-
-public slots:
-    Tab* addNewTab(QUrl url = QUrl("about:blank"));
 
 signals:
     void currentTabChanged();

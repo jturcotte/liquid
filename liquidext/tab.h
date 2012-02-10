@@ -38,14 +38,15 @@ QWKPage* createNewPageFunc(QWKPage*);
 #include <QWebHistory>
 typedef QDeclarativeWebView WebView;
 
+class Tab;
 class WebPage : public QWebPage {
 public:
-    WebPage(TabManager* tabManager);
+    WebPage(Tab* tab);
     virtual QWebPage *createWindow(WebWindowType);
     bool supportsExtension(QWebPage::Extension extension) const;
     bool extension(Extension extension, const ExtensionOption* option = 0, ExtensionReturn* output = 0);
 private:
-    TabManager* m_tabManager;
+    Tab* m_tab;
 };
 #endif
 
@@ -63,13 +64,14 @@ class Tab : public QObject
     Q_PROPERTY(QUrl iconSource READ iconSource NOTIFY iconSourceChanged)
     Q_PROPERTY(double baseWeight READ baseWeight NOTIFY baseWeightChanged)
     Q_PROPERTY(bool closed READ closed NOTIFY closedChanged)
-    Q_PROPERTY(int index READ index CONSTANT)
+    Q_PROPERTY(double index READ index CONSTANT)
 
 public:
-    explicit Tab(const QUrl& url, int index, TabManager* manager, QObject* parent = 0);
+    explicit Tab(const QUrl& url, double index, TabManager* manager, QObject* parent = 0);
     ~Tab();
 
-    int index() const { return m_index; }
+    double index() const { return m_index; }
+    TabManager* manager() const { return m_manager; }
     WebView* webView();
     QString title() const { return m_webView ? m_webView->title() : m_lastTitle; }
     bool closed() const { return !m_webView; }
@@ -100,7 +102,7 @@ private:
     QUrl m_pendingUrl;
     QString m_locationSubstringTyped;
     QString m_lastTitle;
-    int m_index;
+    double m_index;
     TabManager* m_manager;
     WebPage* m_webPage;
     WebView* m_webView;
