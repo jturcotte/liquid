@@ -73,7 +73,6 @@ TabManager::TabManager(Backend* backend)
 #ifdef WK2_BUILD
     , m_webContext(new QWKContext)
 #endif
-    // , m_tabs(new QList<QObject*>)
     , m_tabsImageProvider(new TabsImageProvider(this))
     , m_engine(0)
 {
@@ -160,22 +159,27 @@ Tab* TabManager::addNewTab(Tab* parentTab, QUrl url)
     m_tabs.insert(newTabPos, newTab);
 
     // Check if we passed the limit of tabs.
-    double cheapestWeight = DBL_MAX;
-    Tab* cheapestTab = 0;
-    int numAliveTabs = 0;
-    for (int i = 0; i < m_tabs.size(); ++i) {
-        Tab* tab = static_cast<Tab*>(m_tabs.at(i));
-        if (!tab->closed()) {
-            ++numAliveTabs;
-            if (tab->baseWeight() < cheapestWeight) {
-                cheapestWeight = tab->baseWeight();
-                cheapestTab = tab;
+    double cheapestWeight;
+    Tab* cheapestTab;
+    int numAliveTabs;
+    while (true) {
+        cheapestWeight = DBL_MAX;
+        cheapestTab = 0;
+        numAliveTabs = 0;
+        for (int i = 0; i < m_tabs.size(); ++i) {
+            Tab* tab = static_cast<Tab*>(m_tabs.at(i));
+            if (!tab->closed()) {
+                ++numAliveTabs;
+                if (tab->baseWeight() < cheapestWeight) {
+                    cheapestWeight = tab->baseWeight();
+                    cheapestTab = tab;
+                }
             }
         }
-    }
-    if (numAliveTabs > aliveTabsLimit && cheapestTab) {
-        Q_ASSERT(numAliveTabs == aliveTabsLimit + 1);
-        cheapestTab->close();
+        if (numAliveTabs <= aliveTabsLimit)
+            break;
+        if (cheapestTab)
+            cheapestTab->close();
     }
     return newTab;
 }
