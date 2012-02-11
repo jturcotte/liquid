@@ -36,6 +36,7 @@
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebPage>
 #include <QtWebKit/QWebSettings>
+#include <QNetworkRequest>
 
 QT_BEGIN_NAMESPACE
 
@@ -87,6 +88,12 @@ GraphicsWebView::GraphicsWebView(QDeclarativeWebView* parent)
     : QGraphicsWebView(parent)
     , parent(parent)
 {
+}
+
+void GraphicsWebView::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    QGraphicsWebView::mousePressEvent(event);
+    static_cast<QDeclarativeWebPage*>(page())->setLastPressedButton(event->button());
 }
 
 /*!
@@ -819,8 +826,9 @@ QRect QDeclarativeWebView::elementAreaAt(int x, int y, int maxWidth, int maxHeig
 
     \sa QDeclarativeWebView
 */
-QDeclarativeWebPage::QDeclarativeWebPage(QDeclarativeWebView* parent) :
-    QWebPage(parent)
+QDeclarativeWebPage::QDeclarativeWebPage(QObject* parent)
+    : QWebPage(parent)
+    , lastPressedButton(Qt::NoButton)
 {
 }
 
@@ -866,6 +874,15 @@ bool QDeclarativeWebPage::javaScriptPrompt(QWebFrame* originatingFrame, const QS
     Q_UNUSED(defaultValue)
     Q_UNUSED(result)
     return false;
+}
+
+bool QDeclarativeWebPage::acceptNavigationRequest(QWebFrame *, const QNetworkRequest &request, QWebPage::NavigationType type)
+{
+    if (type == QWebPage::NavigationTypeLinkClicked && lastPressedButton == Qt::MiddleButton) {
+        createBackgroundWindow(WebBrowserWindow)->mainFrame()->load(request.url());
+        return false;
+    }
+    return true;
 }
 
 

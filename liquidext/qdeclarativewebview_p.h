@@ -30,7 +30,6 @@
 #include <QtWebKit/QGraphicsWebView>
 #include <QtWebKit/QWebPage>
 
-
 QT_BEGIN_HEADER
 
 class QWebHistory;
@@ -48,17 +47,21 @@ class QDeclarativeWebViewPrivate;
 class QDeclarativeWebPage : public QWebPage {
     Q_OBJECT
 public:
-    explicit QDeclarativeWebPage(QDeclarativeWebView *parent);
+    explicit QDeclarativeWebPage(QObject *parent);
     ~QDeclarativeWebPage();
+    void setLastPressedButton(Qt::MouseButton button) { lastPressedButton = button; }
 protected:
     QWebPage *createWindow(WebWindowType type);
+    virtual QWebPage *createBackgroundWindow(WebWindowType type) { return createWindow(type); }
     QString chooseFile(QWebFrame *originatingFrame, const QString& oldFile);
     void javaScriptAlert(QWebFrame *originatingFrame, const QString& msg);
     bool javaScriptConfirm(QWebFrame *originatingFrame, const QString& msg);
     bool javaScriptPrompt(QWebFrame *originatingFrame, const QString& msg, const QString& defaultValue, QString* result);
+    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, QWebPage::NavigationType type);
 
 private:
     QDeclarativeWebView *viewItem();
+    Qt::MouseButton lastPressedButton;
 };
 
 class GraphicsWebView : public QGraphicsWebView {
@@ -67,6 +70,7 @@ public:
     GraphicsWebView(QDeclarativeWebView* parent = 0);
 protected:
     void hoverMoveEvent(QGraphicsSceneHoverEvent* event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
 Q_SIGNALS:
     void doubleClick(int clickX, int clickY);

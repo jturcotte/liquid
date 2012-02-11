@@ -39,10 +39,11 @@ QWKPage* createNewPageFunc(QWKPage*);
 typedef QDeclarativeWebView WebView;
 
 class Tab;
-class WebPage : public QWebPage {
+class WebPage : public QDeclarativeWebPage {
 public:
     WebPage(Tab* tab);
     virtual QWebPage *createWindow(WebWindowType);
+    virtual QWebPage *createBackgroundWindow(WebWindowType);
     bool supportsExtension(QWebPage::Extension extension) const;
     bool extension(Extension extension, const ExtensionOption* option = 0, ExtensionReturn* output = 0);
 private:

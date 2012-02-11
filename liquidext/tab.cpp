@@ -38,7 +38,8 @@ QWKPage* createNewPageFunc(QWKPage*)
 
 #else
 WebPage::WebPage(Tab* tab)
-: m_tab(tab)
+: QDeclarativeWebPage(tab)
+, m_tab(tab)
 {
 }
 
@@ -46,6 +47,12 @@ QWebPage* WebPage::createWindow(WebWindowType)
 {
     Tab* newTab = m_tab->manager()->addNewTab(m_tab);
     m_tab->manager()->setCurrentTab(newTab);
+    return newTab->webView()->page();
+}
+
+QWebPage* WebPage::createBackgroundWindow(WebWindowType)
+{
+    Tab* newTab = m_tab->manager()->addNewTab(m_tab);
     return newTab->webView()->page();
 }
 
