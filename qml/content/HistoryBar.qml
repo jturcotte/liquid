@@ -19,14 +19,11 @@
 
 import QtQuick 1.1
 
-DeckLayout {
+FanLayout {
     id: container
     property string toolTipText
     property variant toolTipPos
-    itemOverlap: 4
-    minIncrementOffset: 2
-    zoomAmount: 1.0
-    zoomPos: 1.0
+    itemOverlap: 3
     model: backend.tabManager.currentTab ? backend.tabManager.currentTab.history : null
     delegate: Item {
         property string title: modelData.location.title
@@ -53,6 +50,7 @@ DeckLayout {
         property bool layouted: true
         height: container.height
         width: container.height
+        onWidthChanged: layout()
 
         Item {
             id: iconContainer
@@ -69,7 +67,7 @@ DeckLayout {
         }
     }
     MouseArea {
-        property double _pressedZoomPos: 0.0
+        property double _pressedScrollPos: 0.0
         property int _pressedX: 0
         property int _pressedDistance: 0
         property int _lastMoveX: 0
@@ -80,7 +78,7 @@ DeckLayout {
         hoverEnabled: true
         anchors.fill: container
         onPressed: {
-            _pressedX = mouse.x; _pressedZoomPos = container.zoomPos;
+            _pressedX = mouse.x; _pressedScrollPos = container.scrollPos;
             _pressedDistance = 0;
             _lastMoveX = mouse.x;
             var pressedChild = container.childAt(mouse.x, mouse.y);
@@ -94,7 +92,7 @@ DeckLayout {
             if (mouse.buttons) {
                 _pressedDistance += Math.abs(_lastMoveX - mouse.x);
                 _lastMoveX = mouse.x;
-                container.zoomPos = Math.max(0.0, Math.min(1.0, _pressedZoomPos - (mouse.x - _pressedX) / width));
+                container.scrollPos = _pressedScrollPos - (mouse.x - _pressedX);
             }
             var hitTest = container.childAt(mouseX, mouseY);
             toolTipPos = Qt.point(mouseX, mouseY);
