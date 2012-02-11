@@ -70,9 +70,6 @@ void TabStats::onTabNavigated(Tab* tab)
 TabManager::TabManager(Backend* backend)
     : QObject(backend)
     , m_backend(backend)
-#ifdef WK2_BUILD
-    , m_webContext(new QWKContext)
-#endif
     , m_tabsImageProvider(new TabsImageProvider(this))
     , m_engine(0)
 {

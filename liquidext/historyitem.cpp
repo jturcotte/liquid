@@ -32,12 +32,7 @@ HistoryItem::HistoryItem(int qWebHistoryIndex, Tab* tab, QObject* parent)
 
 void HistoryItem::goTo()
 {
-    // FIXME: WebKit2 and 1 have different behavior regarding the index here.
-#ifdef WK2_BUILD
-    m_tab->webView()->history()->goToItem(m_tab->webView()->history()->itemAt(m_qWebHistoryIndex - m_tab->webView()->history()->backListCount()));
-#else
     m_tab->webView()->history()->goToItem(m_tab->webView()->history()->itemAt(m_qWebHistoryIndex));
-#endif
 }
 
 QUrl HistoryItem::iconSource()
@@ -48,11 +43,7 @@ QUrl HistoryItem::iconSource()
 
 QPixmap HistoryItem::icon()
 {
-#ifdef WK2_BUILD
-    return QPixmap(QSize(16, 16));
-#else
     return QWebSettings::iconForUrl(m_location.destination()).pixmap(QSize(16, 16));
-#endif
 }
 
 void HistoryItem::checkIcon()

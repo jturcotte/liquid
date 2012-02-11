@@ -36,9 +36,6 @@ Backend::Backend(QObject *parent)
     , m_historyDatabase(new HistoryDatabase)
     , m_historyLocator(m_historyDatabase)
 {
-#ifdef WK2_BUILD
-    sTabManagerInstance = m_tabManager;
-#endif
 }
 
 Backend::~Backend()
@@ -71,8 +68,6 @@ void Backend::initializeEngine(QDeclarativeEngine *engine)
     QCoreApplication::setOrganizationName(QLatin1String("liquid"));
     QCoreApplication::setApplicationName(QLatin1String("liquid"));
 
-#ifdef WK2_BUILD
-#else
     QWebSettings* settings = QWebSettings::globalSettings();
     settings->setAttribute(QWebSettings::DnsPrefetchEnabled, true);
     settings->setAttribute(QWebSettings::PluginsEnabled, false);
@@ -84,7 +79,6 @@ void Backend::initializeEngine(QDeclarativeEngine *engine)
     settings->setAttribute(QWebSettings::LocalStorageEnabled, true);
     settings->setAttribute(QWebSettings::AcceleratedCompositingEnabled, true);
     QWebSettings::enablePersistentStorage();
-#endif
 
     QString cookieJarPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/cookiejar.dat";
     engine->networkAccessManager()->setCookieJar(new CookieJar(cookieJarPath, engine->networkAccessManager()));

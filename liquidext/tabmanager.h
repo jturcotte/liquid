@@ -76,17 +76,10 @@ public:
     void onTabClosed(Tab* tab);
     void initializeEngine(QDeclarativeEngine *engine);
 
-#ifdef WK2_BUILD
-    QWKContext* webContext() const { return m_webContext; }
-#endif
-
 signals:
     void currentTabChanged();
 
 private:
-#ifdef WK2_BUILD
-    QWKContext* m_webContext;
-#endif
     Backend* m_backend;
     QObjectListModel m_tabs;
     QLinkedList<Tab*> m_lastCurrentTabs;

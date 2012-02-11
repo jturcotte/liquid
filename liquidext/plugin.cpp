@@ -46,13 +46,8 @@ public:
         qmlRegisterType<HistoryLocator>();
         qmlRegisterType<SearchLocator>();
         qmlRegisterType<Backend>();
-#ifndef WK2_BUILD
         qmlRegisterType<QDeclarativeWebSettings>();
         qmlRegisterType<QDeclarativeWebView>(uri, 1, 0, "WebView");
-#else
-        qmlRegisterType<QDeclarativeWKSettings>();
-        qmlRegisterType<QDeclarativeWKView>(uri, 1, 0, "WebView");
-#endif
         qmlRegisterType<MouseWheelArea>(uri, 1, 0, "MouseWheelArea");
     }
     virtual void initializeEngine(QDeclarativeEngine *engine, const char *)

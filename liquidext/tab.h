@@ -20,25 +20,16 @@
 #ifndef TAB_H
 #define TAB_H
 
-class TabManager;
-class HistoryItem;
-
-#ifdef WK2_BUILD
-#include <qdeclarativewkview_p.h>
-#include <qwkcontext.h>
-#include <qwkhistory.h>
-#include <qwkicondatabase.h>
-typedef QDeclarativeWKView WebView;
-typedef QWKPage WebPage;
-
-extern TabManager* sTabManagerInstance;
-QWKPage* createNewPageFunc(QWKPage*);
-#else
 #include "qdeclarativewebview_p.h"
 #include <QWebHistory>
+
+class TabManager;
+class HistoryItem;
+class Tab;
+
 typedef QDeclarativeWebView WebView;
 
-class Tab;
+
 class WebPage : public QDeclarativeWebPage {
 public:
     WebPage(Tab* tab);
@@ -49,17 +40,12 @@ public:
 private:
     Tab* m_tab;
 };
-#endif
 
 
 class Tab : public QObject
 {
     Q_OBJECT
-#ifdef WK2_BUILD
-    Q_PROPERTY(QDeclarativeWKView* webView READ webView CONSTANT)
-#else
     Q_PROPERTY(QDeclarativeWebView* webView READ webView CONSTANT)
-#endif
     Q_PROPERTY(QList<QObject*> history READ history NOTIFY historyChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QUrl iconSource READ iconSource NOTIFY iconSourceChanged)

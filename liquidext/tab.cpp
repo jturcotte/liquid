@@ -26,17 +26,6 @@
 #include <QtDeclarative/qdeclarativeengine.h>
 #include <QWebFrame>
 
-#ifdef WK2_BUILD
-TabManager* sTabManagerInstance = 0;
-QWKPage* createNewPageFunc(QWKPage*)
-{
-    Q_ASSERT(sTabManagerInstance);
-    Tab* tab = sTabManagerInstance->addNewTab();
-    sTabManagerInstance->setCurrentTab(tab);
-    return tab->webView()->page();
-}
-
-#else
 WebPage::WebPage(Tab* tab)
 : QDeclarativeWebPage(tab)
 , m_tab(tab)
@@ -69,8 +58,6 @@ bool WebPage::extension(Extension, const ExtensionOption* option, ExtensionRetur
     return true;
 }
 
-#endif
-
 
 Tab::Tab(const QUrl& url, double index, TabManager* manager, QObject* parent)
     : QObject(parent)
@@ -96,7 +83,6 @@ Tab::~Tab()
 WebView* Tab::webView()
 {
     Q_ASSERT_X(m_manager->engine(), "Tab::webView()", "This shouldn't be called before the declarative engine was initialized.");
-#ifndef WK2_BUILD
     // We manage the page's lifetime,
     if (!m_webPage) {
         m_webPage = new WebPage(this);
@@ -118,20 +104,6 @@ WebView* Tab::webView()
         connect(m_webPage->mainFrame(), SIGNAL(urlChanged(const QUrl&)), SLOT(onNavigation()));
         emit closedChanged();
     }
-#else
-    if (!m_webView) {
-        m_webView = new WebView(m_manager->webContext());
-        m_webView->page()->setCreateNewPageFunction(createNewPageFunc);
-        connect(m_webView, SIGNAL(titleChanged(const QString&)), SIGNAL(titleChanged()));
-        connect(m_webView, SIGNAL(titleChanged(const QString&)), SLOT(updateTitle()));
-        connect(m_webView, SIGNAL(iconChanged()), SIGNAL(iconSourceChanged()));
-        connect(m_webView, SIGNAL(loadStarted()), SLOT(onLoadStarted()));
-        connect(m_webView, SIGNAL(loadFinished()), SLOT(updateHistory()));
-        // The web view might get deleted when reloading in QmlViewer.
-        connect(m_webView, SIGNAL(destroyed()), SLOT(webViewDestroyed()));
-        emit closedChanged();
-    }
-#endif
     if (m_pendingUrl.isValid()) {
         QUrl pendingUrl = m_pendingUrl;
         m_pendingUrl = QUrl();
