@@ -70,7 +70,7 @@ FanLayout {
     }
     MouseArea {
         property double pressedScrollPos: 0.0
-        property int pressedX: 0
+        property variant pressedPos: 0
         property int pressedDistance: 0
         property int lastMoveX: 0
         property Item pressedChild
@@ -80,7 +80,8 @@ FanLayout {
         hoverEnabled: true
         anchors.fill: container
         onPressed: {
-            pressedX = mouse.x; pressedScrollPos = container.scrollPos;
+            pressedPos = Qt.point(mouse.x, mouse.y);
+            pressedScrollPos = container.scrollPos;
             pressedDistance = 0;
             lastMoveX = mouse.x;
             var child = container.childAt(mouse.x, mouse.y);
@@ -89,15 +90,17 @@ FanLayout {
         onReleased: {
             if (pressedDistance < 25 && container.childAt(mouse.x, mouse.y) === pressedChild)
                 pressedChild.activate();
+            toolTipText = "";
         }
         onPositionChanged: {
+            toolTipPos = Qt.point(mouse.x, mouse.y)
             if (mouse.buttons) {
                 pressedDistance += Math.abs(lastMoveX - mouse.x);
                 lastMoveX = mouse.x;
-                container.scrollPos = pressedScrollPos - (mouse.x - pressedX);
+                container.scrollPos = pressedScrollPos - (mouse.x - pressedPos.x);
+                toolTipPos = pressedPos;
             }
-            var hitTest = container.childAt(mouseX, mouseY);
-            toolTipPos = Qt.point(mouseX, mouseY);
+            var hitTest = container.childAt(toolTipPos.x, toolTipPos.y);
             if (hitTest && hitTest.title)
                 toolTipText = hitTest.title;
             else if (hitTest && hitTest.title === "")
