@@ -46,14 +46,6 @@ FanLayout {
         width: container.height
         onWidthChanged: layout()
 
-        Connections {
-            target: modelObject
-            onRelativeIndexChanged: {
-                if (modelObject.relativeIndex == 0)
-                    rightAlignedItem = historyItem;
-            }
-        }
-
         Item {
             id: iconContainer
             anchors.fill: parent
@@ -66,6 +58,11 @@ FanLayout {
                 y: (parent.height - height) / 2
                 source: modelObject.iconSource
             }
+        }
+
+        Component.onCompleted: {
+            if (modelObject.relativeIndex == 0)
+                rightAlignedItem = historyItem;
         }
     }
     MouseArea {

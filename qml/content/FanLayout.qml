@@ -53,10 +53,8 @@ Item {
         return items;
     }
 
-    onWidthChanged: layout()
-    onScrollPosChanged: layout()
-    onRightAlignedItemChanged: {
-        if (!rightAlignedItem)
+    function scrollToRightAlignedItem(alignItem) {
+        if (!alignItem || !alignItem.parent)
             return;
 
         // Find the scroll position to place the item on the left, then adjust with width to place it on the right.
@@ -64,19 +62,29 @@ Item {
         var scrollPosToItem = 0;
         var found = false;
         for (var i in items) {
-            if (items[i] === rightAlignedItem) {
+            if (items[i] === alignItem) {
                 found = true;
                 break;
             }
             scrollPosToItem += items[i].width - itemOverlap;
         }
         if (found)
-            scrollPos = scrollPosToItem - (width - rightAlignedItem.width + itemOverlap);
+            scrollPos = scrollPosToItem - (width - alignItem.width + itemOverlap);
     }
+
+    onWidthChanged: layout()
+    onScrollPosChanged: layout()
+    onRightAlignedItemChanged: scrollToRightAlignedItem(rightAlignedItem)
 
     Repeater {
         id: repeater
-        onItemAdded: if (item.layouted && item.width) layout()
+        onItemAdded: {
+            // rightAlignedItem might have been set before the item was added as child.
+            if (item === rightAlignedItem)
+                scrollToRightAlignedItem(rightAlignedItem);
+            if (item.layouted && item.width)
+                layout()
+        }
         onItemRemoved: layout()
     }
 }
