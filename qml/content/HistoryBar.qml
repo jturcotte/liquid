@@ -69,32 +69,32 @@ FanLayout {
         }
     }
     MouseArea {
-        property double _pressedScrollPos: 0.0
-        property int _pressedX: 0
-        property int _pressedDistance: 0
-        property int _lastMoveX: 0
-        property Item _pressedChild
+        property double pressedScrollPos: 0.0
+        property int pressedX: 0
+        property int pressedDistance: 0
+        property int lastMoveX: 0
+        property Item pressedChild
         // Make sure the mouse area is under the rest so that it doesn't get returned by parent.childAt.
         z: -1
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
         anchors.fill: container
         onPressed: {
-            _pressedX = mouse.x; _pressedScrollPos = container.scrollPos;
-            _pressedDistance = 0;
-            _lastMoveX = mouse.x;
-            var pressedChild = container.childAt(mouse.x, mouse.y);
-            _pressedChild = pressedChild.layouted ? pressedChild : null;
+            pressedX = mouse.x; pressedScrollPos = container.scrollPos;
+            pressedDistance = 0;
+            lastMoveX = mouse.x;
+            var child = container.childAt(mouse.x, mouse.y);
+            pressedChild = child.layouted ? child : null;
         }
         onReleased: {
-            if (_pressedDistance < 25 && container.childAt(mouse.x, mouse.y) === _pressedChild)
-                _pressedChild.activate();
+            if (pressedDistance < 25 && container.childAt(mouse.x, mouse.y) === pressedChild)
+                pressedChild.activate();
         }
         onPositionChanged: {
             if (mouse.buttons) {
-                _pressedDistance += Math.abs(_lastMoveX - mouse.x);
-                _lastMoveX = mouse.x;
-                container.scrollPos = _pressedScrollPos - (mouse.x - _pressedX);
+                pressedDistance += Math.abs(lastMoveX - mouse.x);
+                lastMoveX = mouse.x;
+                container.scrollPos = pressedScrollPos - (mouse.x - pressedX);
             }
             var hitTest = container.childAt(mouseX, mouseY);
             toolTipPos = Qt.point(mouseX, mouseY);
