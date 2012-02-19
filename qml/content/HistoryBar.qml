@@ -26,6 +26,7 @@ FanLayout {
     itemOverlap: 3
     model: backend.tabManager.currentTab ? backend.tabManager.currentTab.history : null
     delegate: Item {
+        id: historyItem
         property string title: modelObject.location.title
         function activate() {
             modelObject.goTo();
@@ -44,6 +45,14 @@ FanLayout {
         height: container.height
         width: container.height
         onWidthChanged: layout()
+
+        Connections {
+            target: modelObject
+            onRelativeIndexChanged: {
+                if (modelObject.relativeIndex == 0)
+                    rightAlignedItem = historyItem;
+            }
+        }
 
         Item {
             id: iconContainer

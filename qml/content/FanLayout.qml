@@ -26,6 +26,7 @@ Item {
     property int scrollPos: 0
     property alias model: repeater.model
     property alias delegate: repeater.delegate
+    property Item rightAlignedItem
 
     function layout() {
         var items = getItems();
@@ -54,6 +55,24 @@ Item {
 
     onWidthChanged: layout()
     onScrollPosChanged: layout()
+    onRightAlignedItemChanged: {
+        if (!rightAlignedItem)
+            return;
+
+        // Find the scroll position to place the item on the left, then adjust with width to place it on the right.
+        var items = getItems();
+        var scrollPosToItem = 0;
+        var found = false;
+        for (var i in items) {
+            if (items[i] === rightAlignedItem) {
+                found = true;
+                break;
+            }
+            scrollPosToItem += items[i].width - itemOverlap;
+        }
+        if (found)
+            scrollPos = scrollPosToItem - (width - rightAlignedItem.width + itemOverlap);
+    }
 
     Repeater {
         id: repeater
