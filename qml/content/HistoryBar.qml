@@ -35,16 +35,9 @@ FanLayout {
             anchors.fill: parent
             anchors { bottomMargin: -3; topMargin: -3; leftMargin: -3; rightMargin: -3 }
             border { left: 13; top: 13; right: 13; bottom: 13 }
-            source: "pics/card-border.png"
+            source: modelData.relativeIndex == 0 ? "pics/card-border.png" : "pics/card-border-inactive.png"
             horizontalTileMode: BorderImage.Repeat
             verticalTileMode: BorderImage.Repeat
-            visible: modelData.relativeIndex == 0
-        }
-        Rectangle {
-            anchors.fill: parent
-            border.color: "#DDDDDD"
-            radius: 5
-            visible: !fancyBorder.visible
         }
 
         property bool layouted: true
