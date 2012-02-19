@@ -53,6 +53,12 @@ public:
         QList<QObject*>::insert(i, t);
         endInsertRows();
     }
+    void removeLast()
+    {
+        beginRemoveRows(QModelIndex(), size() - 1, size() - 1);
+        QList<QObject*>::removeLast();
+        endRemoveRows();
+    }
     void removeAt(int i)
     {
         beginRemoveRows(QModelIndex(), i, i);
