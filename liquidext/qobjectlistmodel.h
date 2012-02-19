@@ -41,6 +41,12 @@ public:
     {
         return size();
     }
+    void append(QObject* t)
+    {
+        beginInsertRows(QModelIndex(), size(), size());
+        QList<QObject*>::append(t);
+        endInsertRows();
+    }
     void insert(int i, QObject* t)
     {
         beginInsertRows(QModelIndex(), i, i);

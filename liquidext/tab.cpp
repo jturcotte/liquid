@@ -207,7 +207,6 @@ void Tab::onLoadFinished()
 void Tab::onIconChanged()
 {
     // Not efficient, but should do.
-    foreach(QObject* item, m_history) {
-        static_cast<HistoryItem*>(item)->checkIcon();
-    }
+    for (int i = 0; i < m_history.size(); ++i)
+        static_cast<HistoryItem*>(m_history[i])->checkIcon();
 }

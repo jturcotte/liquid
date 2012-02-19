@@ -21,6 +21,7 @@
 #define TAB_H
 
 #include "qdeclarativewebview_p.h"
+#include "qobjectlistmodel.h"
 #include <QWebHistory>
 
 class TabManager;
@@ -46,7 +47,7 @@ class Tab : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QDeclarativeWebView* webView READ webView CONSTANT)
-    Q_PROPERTY(QList<QObject*> history READ history NOTIFY historyChanged)
+    Q_PROPERTY(QObjectListModel* history READ history NOTIFY historyChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QUrl iconSource READ iconSource NOTIFY iconSourceChanged)
     Q_PROPERTY(double baseWeight READ baseWeight NOTIFY baseWeightChanged)
@@ -64,7 +65,7 @@ public:
     bool closed() const { return !m_webView; }
     QUrl iconSource() const;
     double baseWeight();
-    QList<QObject*> history() { return m_history; }
+    QObjectListModel* history() { return &m_history; }
     Q_INVOKABLE void loadUrl(const QUrl& url, const QString& typedText);
     Q_INVOKABLE void close();
 
@@ -93,7 +94,7 @@ private:
     TabManager* m_manager;
     WebPage* m_webPage;
     WebView* m_webView;
-    QList<QObject*> m_history;
+    QObjectListModel m_history;
     HistoryItem* m_currentHistoryItem;
     bool m_storedVisit;
 };

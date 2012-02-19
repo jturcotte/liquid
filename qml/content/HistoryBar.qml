@@ -26,16 +26,16 @@ FanLayout {
     itemOverlap: 3
     model: backend.tabManager.currentTab ? backend.tabManager.currentTab.history : null
     delegate: Item {
-        property string title: modelData.location.title
+        property string title: modelObject.location.title
         function activate() {
-            modelData.goTo();
+            modelObject.goTo();
         }
         BorderImage {
             id: fancyBorder
             anchors.fill: parent
             anchors { bottomMargin: -3; topMargin: -3; leftMargin: -3; rightMargin: -3 }
             border { left: 13; top: 13; right: 13; bottom: 13 }
-            source: modelData.relativeIndex == 0 ? "pics/card-border.png" : "pics/card-border-inactive.png"
+            source: modelObject.relativeIndex == 0 ? "pics/card-border.png" : "pics/card-border-inactive.png"
             horizontalTileMode: BorderImage.Repeat
             verticalTileMode: BorderImage.Repeat
         }
@@ -55,7 +55,7 @@ FanLayout {
                 height: 16
                 x: (parent.width - width) / 2
                 y: (parent.height - height) / 2
-                source: modelData.iconSource
+                source: modelObject.iconSource
             }
         }
     }
