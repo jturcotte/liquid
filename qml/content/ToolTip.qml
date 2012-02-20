@@ -25,7 +25,7 @@ Item {
     property Item sourceItem
     property variant mappedPos: "0, 0"
 
-    x: mappedPos.x + 10
+    x: mappedPos.x
     y: mappedPos.y + 15
     opacity: sourceItem ? 1.0 : 0.0
 
