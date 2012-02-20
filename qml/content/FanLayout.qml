@@ -46,7 +46,7 @@ Item {
             curMathX = -scrollPos;
 
         for (var i in items) {
-            items[i].x = Math.max(0, Math.min(width, curMathX));
+            items[i].targetX = Math.max(0, Math.min(width, curMathX));
             curMathX += items[i].width - itemOverlap;
         }
     }

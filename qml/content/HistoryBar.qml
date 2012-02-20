@@ -23,11 +23,25 @@ FanLayout {
     id: container
     property string toolTipText
     property variant toolTipPos
+    property bool xBehaviorEnabled: true
     itemOverlap: 3
-    model: backend.tabManager.currentTab ? backend.tabManager.currentTab.history : null
+
+    Connections {
+        target: backend.tabManager
+        onCurrentTabChanged: {
+            xBehaviorEnabled = false;
+            model = backend.tabManager.currentTab ? backend.tabManager.currentTab.history : null;
+            xBehaviorEnabled = true;
+        }
+    }
+
     delegate: Item {
         id: historyItem
         property string title: modelObject.location.title
+        property int targetX: container.width
+        x: targetX
+        Behavior on x { enabled: xBehaviorEnabled; NumberAnimation {} }
+
         function activate() {
             modelObject.goTo();
         }
@@ -92,10 +106,13 @@ FanLayout {
         onPositionChanged: {
             toolTipPos = Qt.point(mouse.x, mouse.y)
             if (mouse.buttons) {
+                toolTipPos = pressedPos;
                 pressedDistance += Math.abs(lastMoveX - mouse.x);
                 lastMoveX = mouse.x;
+
+                xBehaviorEnabled = false;
                 container.scrollPos = pressedScrollPos - (mouse.x - pressedPos.x);
-                toolTipPos = pressedPos;
+                xBehaviorEnabled = true;
             }
             var hitTest = container.childAt(toolTipPos.x, toolTipPos.y);
             if (hitTest && hitTest.title)
