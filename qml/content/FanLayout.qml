@@ -91,6 +91,10 @@ Item {
             if (item.layouted && item.width)
                 layout()
         }
-        onItemRemoved: layout()
+        onItemRemoved: {
+            // The item isn't removed yet, make sure it doesn't take space.
+            item.layouted = false;
+            layout();
+        }
     }
 }
