@@ -38,7 +38,13 @@ Item {
         var contentsWidth = items.reduce(function(accum, val) { return accum + val.width - itemOverlap; }, 0);
         scrollPos = Math.max(0, Math.min(contentsWidth - width, scrollPos));
 
-        var curMathX = -scrollPos;
+        var curMathX;
+        // Right align everything if the container is larger than the contents.
+        if (contentsWidth < width)
+            curMathX = width - contentsWidth;
+        else
+            curMathX = -scrollPos;
+
         for (var i in items) {
             items[i].x = Math.max(0, Math.min(width, curMathX));
             curMathX += items[i].width - itemOverlap;
