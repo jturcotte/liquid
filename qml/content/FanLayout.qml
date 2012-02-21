@@ -33,7 +33,7 @@ Item {
         if (!items.length)
             return;
 
-        // The itemOvelap is also substracted from the last item to allow any
+        // The itemOverlap is also substracted from the last item to allow any
         // item anchored to the container to overlap the last item.
         var contentsWidth = items.reduce(function(accum, val) { return accum + val.width - itemOverlap; }, 0);
         scrollPos = Math.max(0, Math.min(contentsWidth - width, scrollPos));
@@ -46,7 +46,10 @@ Item {
             curMathX = -scrollPos;
 
         for (var i in items) {
-            items[i].targetX = Math.max(0, Math.min(width, curMathX));
+            // Add an offset for items (except the first and last) to give
+            // a hint to the user that the list can be panned.
+            var stackEffectOffset = i > 0 && i < items.length - 1 ? itemOverlap : 0;
+            items[i].targetX = Math.max(stackEffectOffset, Math.min(width - stackEffectOffset, curMathX));
             curMathX += items[i].width - itemOverlap;
         }
     }
