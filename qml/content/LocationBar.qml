@@ -236,5 +236,9 @@ Item {
         anchors.top: parent.bottom
         anchors.topMargin: 3
         visible: inputText.activeFocus
+        onLocationClicked: {
+            container.urlEntered(location.destination, inputText.enteredText)
+            backend.tabManager.currentTab.webView.forceActiveFocus();
+        }
     }
 }

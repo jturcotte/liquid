@@ -24,6 +24,7 @@ Item {
     id: container
     property bool searchOnTop: false
     property variant selectedLocation: historySuggestions.selectedLocation ? historySuggestions.selectedLocation : searchSuggestions.selectedLocation
+    signal locationClicked(variant location)
 
     function selectPreviousItem() {
         --_selectedIndex;
@@ -72,6 +73,7 @@ Item {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
+            onLocationClicked: container.locationClicked(location)
         }
         SuggestionPanel {
             id: searchSuggestions
@@ -80,6 +82,7 @@ Item {
             anchors.top: historySuggestions.bottom
             anchors.left: parent.left
             anchors.right: parent.right
+            onLocationClicked: container.locationClicked(location)
         }
     }
 

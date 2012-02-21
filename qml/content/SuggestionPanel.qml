@@ -24,6 +24,7 @@ Column {
     property int selectedIndex
     property variant selectedLocation: selectedIndex == -1 ? null : model[selectedIndex]
     property int itemHeight: 28
+    signal locationClicked(variant location)
 
     id: container
     height: itemHeight * model.length
@@ -39,7 +40,7 @@ Column {
                 return false;
             }
             location: modelData
-            // showDestination: container.showDestination
+            onClicked: locationClicked(location)
         }
     }
 }

@@ -5,7 +5,13 @@ Item {
     id: container
     property variant location
     property bool selected
+    signal clicked()
 
+    Rectangle {
+        anchors.fill: parent
+        color: "#f0f0f0"
+        visible: mouseArea.containsMouse
+    }
     Rectangle {
         anchors.fill: parent
         color: "lightgreen"
@@ -46,5 +52,11 @@ Item {
         color: location.type == Location.SearchType ? "#77bbbb" : "#77bb77"
         visible: displayedText
         text: "- " + displayedText
+    }
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onClicked: container.clicked()
     }
 }
