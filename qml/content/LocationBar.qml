@@ -189,9 +189,10 @@ Item {
             } else
                 backend.tabManager.currentTab.webView.forceActiveFocus()
         }
-        Keys.onUpPressed: { suggestionBox.selectPreviousItem() }
+        Keys.onUpPressed: suggestionBox.selectPreviousItem()
         Keys.onDownPressed: suggestionBox.selectNextItem()
-        Keys.onTabPressed: suggestionBox.searchOnTop = !suggestionBox.searchOnTop
+        Keys.onBacktabPressed: suggestionBox.selectPreviousItem()
+        Keys.onTabPressed: suggestionBox.selectNextItem()
     }
 
     // Have an identical Text element just to get the paintedWidth (sigh...)
