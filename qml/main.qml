@@ -31,6 +31,9 @@ Rectangle {
         backend.tabManager.currentTab = backend.tabManager.addNewTab()
         locationBar.focusAndSelect()
     }
+    function handleShortcut(key, modifiers) {
+        return ShortcutHandler.handleShortcut(key, modifiers);
+    }
 
     width: 800; height: 600
     color: "transparent"
@@ -194,9 +197,6 @@ Rectangle {
         }
     }
 
-    Keys.onPressed: {
-        ShortcutHandler.handleEvent(event)
-    }
     Component.onCompleted: {
         ShortcutHandler.setHandler("OpenNewTab", addNewEmptyTab)
         ShortcutHandler.setHandler("ShowNextTab", backend.tabManager.showNextTab)

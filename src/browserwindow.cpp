@@ -63,8 +63,15 @@ void BrowserWindow::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_F12)
         loadQml();
-    else
+    else if (!handleShortcut(event))
         QDeclarativeView::keyPressEvent(event);
+}
+
+bool BrowserWindow::handleShortcut(QKeyEvent* event)
+{
+    QVariant handled;
+    rootObject()->metaObject()->invokeMethod(rootObject(), "handleShortcut", Qt::DirectConnection, Q_RETURN_ARG(QVariant, handled), Q_ARG(QVariant, event->key()), Q_ARG(QVariant, static_cast<int>(event->modifiers())));
+    return handled.toBool();
 }
 
 void BrowserWindow::loadQml()

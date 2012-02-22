@@ -36,6 +36,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent* event);
 
 private:
+    bool handleShortcut(QKeyEvent* event);
     void loadQml();
     QString m_rootDirPath;
     Backend* m_backend;

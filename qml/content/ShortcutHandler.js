@@ -1,13 +1,6 @@
-/*
-Options:
-- Import JS file with global variable in which items register themselves on load and on change.
-- main.qml passes around the shortcut handler and they register themselves.
-- a set of qactions is set somewhere and the shortcut handler uses it (qaction isn't reliable for qt5 though).
-- a map of action->function is set somewhere and the shortcut handler uses it.
-*/
-function actionForEvent(event) {
-    if (event.modifiers & Qt.ControlModifier && event.modifiers & Qt.ShiftModifier) {
-        switch (event.key) {
+function actionForEvent(key, modifiers) {
+    if (modifiers & Qt.ControlModifier && modifiers & Qt.ShiftModifier) {
+        switch (key) {
         case Qt.Key_BracketLeft:
             return "ShowPreviousTab";
         case Qt.Key_BracketRight:
@@ -17,13 +10,13 @@ function actionForEvent(event) {
         case Qt.Key_G:
             return "FindPreviousInPage";
         }
-    } else if (event.modifiers & Qt.MetaModifier && event.modifiers & Qt.ShiftModifier) {
-        switch (event.key) {
+    } else if (modifiers & Qt.MetaModifier && modifiers & Qt.ShiftModifier) {
+        switch (key) {
         case Qt.Key_Tab:
             return "ShowPreviousTab";
         }
-    } else if (event.modifiers & Qt.ControlModifier) {
-        switch (event.key) {
+    } else if (modifiers & Qt.ControlModifier) {
+        switch (key) {
         case Qt.Key_T:
             return "OpenNewTab"
         case Qt.Key_K:
@@ -47,8 +40,8 @@ function actionForEvent(event) {
         case Qt.Key_F5:
             return "ReloadFull";
         }
-    } else if (event.modifiers & Qt.MetaModifier) {
-        switch (event.key) {
+    } else if (modifiers & Qt.MetaModifier) {
+        switch (key) {
         case Qt.Key_Tab:
             return "ShowNextTab";
         case Qt.Key_PageUp:
@@ -60,13 +53,13 @@ function actionForEvent(event) {
         case Qt.Key_Right:
             return "GoForward";
         }
-    } else if (event.modifiers & Qt.ShiftModifier) {
-        switch (event.key) {
+    } else if (modifiers & Qt.ShiftModifier) {
+        switch (key) {
         case Qt.Key_F3:
             return "FindPreviousInPage";
         }
     } else {
-        switch (event.key) {
+        switch (key) {
         case Qt.Key_Esc:
             return "Stop";
         case Qt.Key_F3:
@@ -83,11 +76,14 @@ function setHandler(actionName, handler) {
     _handlers[actionName] = handler;
 }
 
-function handleEvent(event) {
-    var actionName = actionForEvent(event);
+function handleShortcut(key, modifiers) {
+    var actionName = actionForEvent(key, modifiers);
     var handler = _handlers[actionName];
     if (handler)
         handler();
     else if (actionName)
         console.log("ShortcutHandler: No registered handler for action [" + actionName + "]");
+    else
+        return false;
+    return true;
 }
