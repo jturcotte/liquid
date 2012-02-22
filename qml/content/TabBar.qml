@@ -49,8 +49,8 @@ TopTabsLayout {
 
         Behavior on x { enabled: !inInitialAnim && !inResize; NumberAnimation {} }
         Component.onCompleted: state = minimized ? "minimized" : "";
-        onBaseWeightChanged: redistribute();
-        onMinimizedChanged: redistribute()
+        onBaseWeightChanged: layout();
+        onMinimizedChanged: layout()
 
         BorderImage {
             id: borderImage

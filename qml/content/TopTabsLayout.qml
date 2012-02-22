@@ -32,7 +32,7 @@ Item {
     property alias delegate: repeater.delegate
     id: main
 
-    function redistribute() {
+    function layout() {
         var allItems = getAllItems()
         var aliveItems = getAliveItems(allItems)
         if (!aliveItems.length && !allItems.length)
@@ -150,20 +150,20 @@ Item {
     }
 
     onWidthChanged: {
-        // A behavior on x and stopping it's animation on redistribute would work better, but it blocks the UI.
+        // A behavior on x and stopping it's animation on layout would work better, but it blocks the UI.
         // Use this hack until a better way is found.
         inResize = true;
-        redistribute();
+        layout();
         inResize = false;
     }
 
     Repeater {
         id: repeater
-        onItemAdded: redistribute()
+        onItemAdded: layout()
         onItemRemoved: {
             // The item isn't removed yet, make sure it doesn't take space.
             item.layouted = false;
-            redistribute();
+            layout();
         }
     }
 }
