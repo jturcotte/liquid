@@ -23,6 +23,7 @@
 #include <QDeclarativeView>
 #include <QUrl>
 
+class Backend;
 class QKeyEvent;
 
 class BrowserWindow : public QDeclarativeView {
@@ -37,6 +38,7 @@ protected:
 private:
     void loadQml();
     QString m_rootDirPath;
+    Backend* m_backend;
 };
 
 #endif // BROWSERWINDOW_H

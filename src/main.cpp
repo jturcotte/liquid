@@ -21,8 +21,27 @@
 #include "browserwindow.h"
 #include "browserapplication.h"
 
+#include "backend.h"
+#include "historylocator.h"
+#include "location.h"
+#include "mousewheelarea.h"
+#include "searchlocator.h"
+#include "tab.h"
+#include "tabmanager.h"
+
 int main(int argc, char** argv)
 {
+    qmlRegisterType<Tab>();
+    qmlRegisterType<QObjectListModel>();
+    qmlRegisterType<TabManager>();
+    qmlRegisterType<HistoryLocator>();
+    qmlRegisterType<SearchLocator>();
+    qmlRegisterType<Backend>();
+    qmlRegisterType<QDeclarativeWebSettings>();
+    qmlRegisterType<QDeclarativeWebView>("liquid", 1, 0, "WebView");
+    qmlRegisterType<Location>("liquid", 1, 0, "Location");
+    qmlRegisterType<MouseWheelArea>("liquid", 1, 0, "MouseWheelArea");
+
     BrowserApplication app(argc, argv);
     if (!app.isRunning())
         return 0;

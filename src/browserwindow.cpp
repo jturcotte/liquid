@@ -23,10 +23,13 @@
 #include <QDeclarativeEngine>
 #include <QGraphicsObject>
 #include <QKeyEvent>
+#include "backend.h"
 #include "dwmhelper.h"
 
 BrowserWindow::BrowserWindow()
+: m_backend(new Backend(this))
 {
+    m_backend->initializeEngine(engine());
 #ifdef Q_OS_MAC
     // Crappy hardcoded path to use until the qml is bundled as resources.
     m_rootDirPath = QCoreApplication::applicationDirPath() + "/../../..";

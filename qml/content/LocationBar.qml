@@ -19,7 +19,7 @@
 */
 
 import QtQuick 1.1
-import liquidext 1.0
+import liquid 1.0
 
 Item {
     id: container

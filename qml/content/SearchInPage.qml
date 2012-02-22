@@ -19,7 +19,6 @@
 */
 
 import QtQuick 1.1
-import liquidext 1.0
 
 Item {
     property bool expanded: false
