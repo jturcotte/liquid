@@ -44,6 +44,15 @@ Backend::~Backend()
     delete m_tabManager;
 }
 
+bool Backend::isMac() const
+{
+#ifdef Q_OS_MAC
+    return true;
+#else
+    return false;
+#endif
+}
+
 Location* Backend::locationFromUserInput(const QString& input)
 {
     // The returned object is leaked and should automatically have a JavaScript ownership when called from QML.

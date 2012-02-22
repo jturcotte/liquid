@@ -36,6 +36,7 @@ class Backend : public QObject
     Q_PROPERTY(TabManager* tabManager READ tabManager CONSTANT)
     Q_PROPERTY(HistoryLocator* historyLocator READ historyLocator CONSTANT)
     Q_PROPERTY(SearchLocator* searchLocator READ searchLocator CONSTANT)
+    Q_PROPERTY(bool isMac READ isMac CONSTANT)
 public:
     explicit Backend(QObject *parent = 0);
     ~Backend();
@@ -44,6 +45,7 @@ public:
     HistoryDatabase* historyDatabase() { return m_historyDatabase; }
     HistoryLocator* historyLocator() { return &m_historyLocator; }
     SearchLocator* searchLocator() { return &m_searchLocator; }
+    bool isMac() const;
     Q_INVOKABLE Location* locationFromUserInput(const QString& input);
     Q_INVOKABLE QString machineUsername();
     void initializeEngine(QDeclarativeEngine *engine);
