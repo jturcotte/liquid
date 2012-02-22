@@ -83,7 +83,7 @@ Item {
             }
         }
         if (currentSubset.items.length) {
-            currentSubset.center = width;
+            currentSubset.center = !aliveItems.length ? 0 : aliveItems[aliveItems.length-1].targetX + aliveItems[aliveItems.length-1].width;
             subsets.push(currentSubset);
         }
 
