@@ -36,8 +36,8 @@ Column {
             height: itemHeight
             selected: {
                 if (index == selectedIndex)
-                    return true;
-                return false;
+                    return true
+                return false
             }
             location: modelData
             onClicked: locationClicked(location)

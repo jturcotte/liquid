@@ -29,56 +29,56 @@ Item {
     property Item rightAlignedItem
 
     function layout() {
-        var items = getItems();
+        var items = getItems()
         if (!items.length)
-            return;
+            return
 
         // The itemOverlap is also substracted from the last item to allow any
         // item anchored to the container to overlap the last item.
-        var contentsWidth = items.reduce(function(accum, val) { return accum + val.width - itemOverlap; }, 0);
-        scrollPos = Math.max(0, Math.min(contentsWidth - width, scrollPos));
+        var contentsWidth = items.reduce(function(accum, val) { return accum + val.width - itemOverlap; }, 0)
+        scrollPos = Math.max(0, Math.min(contentsWidth - width, scrollPos))
 
-        var curMathX;
+        var curMathX
         // Right align everything if the container is larger than the contents.
         if (contentsWidth < width)
-            curMathX = width - contentsWidth;
+            curMathX = width - contentsWidth
         else
-            curMathX = -scrollPos;
+            curMathX = -scrollPos
 
         for (var i in items) {
             // Add an offset for items (except the first and last) to give
             // a hint to the user that the list can be panned.
-            var stackEffectOffset = i > 0 && i < items.length - 1 ? itemOverlap : 0;
-            items[i].targetX = Math.max(stackEffectOffset, Math.min(width - stackEffectOffset, curMathX));
-            curMathX += items[i].width - itemOverlap;
+            var stackEffectOffset = i > 0 && i < items.length - 1 ? itemOverlap : 0
+            items[i].targetX = Math.max(stackEffectOffset, Math.min(width - stackEffectOffset, curMathX))
+            curMathX += items[i].width - itemOverlap
         }
     }
 
     function getItems() {
-        var items = [];
+        var items = []
         for (var i = 0; i < children.length; ++i)
             if (children[i].layouted)
-                items.push(children[i]);
-        return items;
+                items.push(children[i])
+        return items
     }
 
     function scrollToRightAlignedItem(alignItem) {
         if (!alignItem || !alignItem.parent)
-            return;
+            return
 
         // Find the scroll position to place the item on the left, then adjust with width to place it on the right.
-        var items = getItems();
-        var scrollPosToItem = 0;
-        var found = false;
+        var items = getItems()
+        var scrollPosToItem = 0
+        var found = false
         for (var i in items) {
             if (items[i] === alignItem) {
-                found = true;
-                break;
+                found = true
+                break
             }
-            scrollPosToItem += items[i].width - itemOverlap;
+            scrollPosToItem += items[i].width - itemOverlap
         }
         if (found)
-            scrollPos = scrollPosToItem - (width - alignItem.width + itemOverlap);
+            scrollPos = scrollPosToItem - (width - alignItem.width + itemOverlap)
     }
 
     onWidthChanged: layout()
@@ -90,14 +90,14 @@ Item {
         onItemAdded: {
             // rightAlignedItem might have been set before the item was added as child.
             if (item === rightAlignedItem)
-                scrollToRightAlignedItem(rightAlignedItem);
+                scrollToRightAlignedItem(rightAlignedItem)
             if (item.layouted && item.width)
                 layout()
         }
         onItemRemoved: {
             // The item isn't removed yet, make sure it doesn't take space.
-            item.layouted = false;
-            layout();
+            item.layouted = false
+            layout()
         }
     }
 }

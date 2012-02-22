@@ -29,7 +29,7 @@ Rectangle {
     }
     function addNewEmptyTab() {
         backend.tabManager.currentTab = backend.tabManager.addNewTab()
-        locationBar.focusAndSelect();
+        locationBar.focusAndSelect()
     }
 
     width: 800; height: 600
@@ -42,21 +42,21 @@ Rectangle {
             anchors.fill: parent
             property variant tabMonitor: backend.tabManager.currentTab
             onTabMonitorChanged: {
-                var oldView = children[0];
+                var oldView = children[0]
                 if (oldView) {
-                    oldView.visible = false;
-                    oldView.parent = null;
+                    oldView.visible = false
+                    oldView.parent = null
                 }
                 if (tabMonitor) {
-                    tabMonitor.webView.visible = true;
-                    tabMonitor.webView.parent = webView;
-                    tabMonitor.webView.anchors.fill = webView;
-                    tabMonitor.webView.forceActiveFocus();
-                    ShortcutHandler.setHandler("GoBack", tabMonitor.webView.back.trigger);
-                    ShortcutHandler.setHandler("GoForward", tabMonitor.webView.forward.trigger);
-                    ShortcutHandler.setHandler("Reload", tabMonitor.webView.reload.trigger);
-                    ShortcutHandler.setHandler("Stop", tabMonitor.webView.stop.trigger);
-                    ShortcutHandler.setHandler("CloseTab", tabMonitor.close);
+                    tabMonitor.webView.visible = true
+                    tabMonitor.webView.parent = webView
+                    tabMonitor.webView.anchors.fill = webView
+                    tabMonitor.webView.forceActiveFocus()
+                    ShortcutHandler.setHandler("GoBack", tabMonitor.webView.back.trigger)
+                    ShortcutHandler.setHandler("GoForward", tabMonitor.webView.forward.trigger)
+                    ShortcutHandler.setHandler("Reload", tabMonitor.webView.reload.trigger)
+                    ShortcutHandler.setHandler("Stop", tabMonitor.webView.stop.trigger)
+                    ShortcutHandler.setHandler("CloseTab", tabMonitor.close)
                 }
             }
         }
@@ -71,8 +71,8 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onPressed: {
-                backend.tabManager.currentTab.webView.forceActiveFocus();
-                mouse.accepted = false;
+                backend.tabManager.currentTab.webView.forceActiveFocus()
+                mouse.accepted = false
             }
         }
     }
@@ -153,8 +153,8 @@ Rectangle {
                         bottomMargin: 5; topMargin: 5; rightMargin: 3
                     }
                     onUrlEntered: {
-                        backend.tabManager.currentTab.loadUrl(url, enteredText);
-                        backend.tabManager.currentTab.webView.forceActiveFocus();
+                        backend.tabManager.currentTab.loadUrl(url, enteredText)
+                        backend.tabManager.currentTab.webView.forceActiveFocus()
                     }
                 }
 
@@ -183,28 +183,28 @@ Rectangle {
         Connections {
             target: backend
             onCredentialsNeeded: {
-                authDialog.show();
+                authDialog.show()
             }
         }
         onCredentialsEntered: {
-            backend.enterCredentials(username, password);
+            backend.enterCredentials(username, password)
         }
         onCancelled: {
-            backend.cancelAuth();
+            backend.cancelAuth()
         }
     }
 
     Keys.onPressed: {
-        ShortcutHandler.handleEvent(event);
+        ShortcutHandler.handleEvent(event)
     }
     Component.onCompleted: {
-        ShortcutHandler.setHandler("OpenNewTab", addNewEmptyTab);
-        ShortcutHandler.setHandler("ShowNextTab", backend.tabManager.showNextTab);
-        ShortcutHandler.setHandler("ShowPreviousTab", backend.tabManager.showPreviousTab);
-        ShortcutHandler.setHandler("FocusLocationBar_HistoryMode", locationBar.focusAndSelect);
-        ShortcutHandler.setHandler("FocusLocationBar_SearchMode", locationBar.focusAndSelectInSearchMode);
-        ShortcutHandler.setHandler("FocusSearchInPage", searchInPage.focusAndSelect);
-        ShortcutHandler.setHandler("FindPreviousInPage", searchInPage.findPrevious);
-        ShortcutHandler.setHandler("FindNextInPage", searchInPage.findNext);
+        ShortcutHandler.setHandler("OpenNewTab", addNewEmptyTab)
+        ShortcutHandler.setHandler("ShowNextTab", backend.tabManager.showNextTab)
+        ShortcutHandler.setHandler("ShowPreviousTab", backend.tabManager.showPreviousTab)
+        ShortcutHandler.setHandler("FocusLocationBar_HistoryMode", locationBar.focusAndSelect)
+        ShortcutHandler.setHandler("FocusLocationBar_SearchMode", locationBar.focusAndSelectInSearchMode)
+        ShortcutHandler.setHandler("FocusSearchInPage", searchInPage.focusAndSelect)
+        ShortcutHandler.setHandler("FindPreviousInPage", searchInPage.findPrevious)
+        ShortcutHandler.setHandler("FindNextInPage", searchInPage.findNext)
     }
 }

@@ -26,12 +26,12 @@ Image {
     function typeToString(type) {
         switch (type) {
         case Location.HistoryType:
-            return "history";
+            return "history"
         case Location.SearchType:
-            return "search";
+            return "search"
         case Location.WwwType:
         default:
-            return "www";
+            return "www"
         }
     }
     source: "pics/" + typeToString(location.type) + "-icon.png"

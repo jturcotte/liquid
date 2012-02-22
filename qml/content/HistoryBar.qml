@@ -29,9 +29,9 @@ FanLayout {
     Connections {
         target: backend.tabManager
         onCurrentTabChanged: {
-            xBehaviorEnabled = false;
-            model = backend.tabManager.currentTab ? backend.tabManager.currentTab.history : null;
-            xBehaviorEnabled = true;
+            xBehaviorEnabled = false
+            model = backend.tabManager.currentTab ? backend.tabManager.currentTab.history : null
+            xBehaviorEnabled = true
         }
     }
 
@@ -43,7 +43,7 @@ FanLayout {
         Behavior on x { enabled: xBehaviorEnabled; NumberAnimation {} }
 
         function activate() {
-            modelObject.goTo();
+            modelObject.goTo()
         }
         BorderImage {
             id: fancyBorder
@@ -76,7 +76,7 @@ FanLayout {
 
         Component.onCompleted: {
             if (modelObject.relativeIndex == 0)
-                rightAlignedItem = historyItem;
+                rightAlignedItem = historyItem
         }
     }
     MouseArea {
@@ -91,36 +91,36 @@ FanLayout {
         hoverEnabled: true
         anchors.fill: container
         onPressed: {
-            pressedPos = Qt.point(mouse.x, mouse.y);
-            pressedScrollPos = container.scrollPos;
-            pressedDistance = 0;
-            lastMoveX = mouse.x;
-            var child = container.childAt(mouse.x, mouse.y);
-            pressedChild = child.layouted ? child : null;
+            pressedPos = Qt.point(mouse.x, mouse.y)
+            pressedScrollPos = container.scrollPos
+            pressedDistance = 0
+            lastMoveX = mouse.x
+            var child = container.childAt(mouse.x, mouse.y)
+            pressedChild = child.layouted ? child : null
         }
         onReleased: {
             if (pressedDistance < 25 && container.childAt(mouse.x, mouse.y) === pressedChild)
-                pressedChild.activate();
-            toolTipText = "";
+                pressedChild.activate()
+            toolTipText = ""
         }
         onPositionChanged: {
             toolTipPos = Qt.point(mouse.x, mouse.y)
             if (mouse.buttons) {
-                toolTipPos = pressedPos;
-                pressedDistance += Math.abs(lastMoveX - mouse.x);
-                lastMoveX = mouse.x;
+                toolTipPos = pressedPos
+                pressedDistance += Math.abs(lastMoveX - mouse.x)
+                lastMoveX = mouse.x
 
-                xBehaviorEnabled = false;
-                container.scrollPos = pressedScrollPos - (mouse.x - pressedPos.x);
-                xBehaviorEnabled = true;
+                xBehaviorEnabled = false
+                container.scrollPos = pressedScrollPos - (mouse.x - pressedPos.x)
+                xBehaviorEnabled = true
             }
-            var hitTest = container.childAt(toolTipPos.x, toolTipPos.y);
+            var hitTest = container.childAt(toolTipPos.x, toolTipPos.y)
             if (hitTest && hitTest.title)
-                toolTipText = hitTest.title;
+                toolTipText = hitTest.title
             else if (hitTest && hitTest.title === "")
-                toolTipText = "[No title]";
+                toolTipText = "[No title]"
             else
-                toolTipText = "";
+                toolTipText = ""
         }
         onExited: toolTipText = ""
     }

@@ -29,14 +29,14 @@ Item {
     signal urlEntered(string url, string enteredText)
 
     function focusAndSelect() {
-        inputText.forceActiveFocus();
-        inputText.selectAll();
-        suggestionBox.searchOnTop = false;
+        inputText.forceActiveFocus()
+        inputText.selectAll()
+        suggestionBox.searchOnTop = false
     }
     function focusAndSelectInSearchMode() {
-        inputText.forceActiveFocus();
-        inputText.selectAll();
-        suggestionBox.searchOnTop = true;
+        inputText.forceActiveFocus()
+        inputText.selectAll()
+        suggestionBox.searchOnTop = true
     }
 
     Location {
@@ -56,7 +56,7 @@ Item {
     }
     onBoundToWebViewLocationChanged: {
         if (boundToWebViewLocation)
-            suggestionBox.setInputText("");
+            suggestionBox.setInputText("")
     }
 
     BorderImage {
@@ -99,72 +99,72 @@ Item {
 
         function adjustTextAndSelection() {
             if (boundToWebViewLocation) {
-                setText(currentLocation.destination);
+                setText(currentLocation.destination)
                 if (activeFocus)
-                    selectAll();
-                return;
+                    selectAll()
+                return
             }
 
             if (currentLocation == manualLocation) {
                 // Make sure we keep the cursor position if the text is the same.
                 if (text != currentLocation.inputText)
-                    setText(currentLocation.inputText);
+                    setText(currentLocation.inputText)
                 return
             }
 
-            var pos = currentLocation.inputText.search(new RegExp(enteredText, "i"));
+            var pos = currentLocation.inputText.search(new RegExp(enteredText, "i"))
             if (pos != -1) {
-                setText(currentLocation.inputText.substring(pos));
-                select(enteredText.length, text.length);
+                setText(currentLocation.inputText.substring(pos))
+                select(enteredText.length, text.length)
             } else {
-                pos = currentLocation.title.search(new RegExp(enteredText, "i"));
+                pos = currentLocation.title.search(new RegExp(enteredText, "i"))
                 if (pos != -1) {
-                    setText(currentLocation.title.substring(pos));
-                    select(enteredText.length, text.length);
+                    setText(currentLocation.title.substring(pos))
+                    select(enteredText.length, text.length)
                 } else
                     // The suggestion doesn't match, show the suggested text and keep our text in enteredText.
-                    setText(currentLocation.inputText);
+                    setText(currentLocation.inputText)
             }
         }
 
         function setText(newText) {
-            textSetGuard = true;
-            text = newText;
-            textSetGuard = false;
+            textSetGuard = true
+            text = newText
+            textSetGuard = false
         }
 
         onTextChanged: {
             // Exit if the text wasn't set by the user.
             if (textSetGuard)
-                return;
+                return
 
             // Guess what is the text that the user entered among the displayed text.
-            var newEnteredText = text;
+            var newEnteredText = text
             if (selectionEnd == text.length && selectionStart != selectionEnd)
-                newEnteredText = text.substring(0, selectionStart);
+                newEnteredText = text.substring(0, selectionStart)
 
             // Only update if the new text is not a substring of the previously entered text.
             // This prevents re-asking and getting re-completed when backspacing.
-            var updateSuggestions = enteredText.toLowerCase().indexOf(newEnteredText.toLowerCase()) == -1;
-            enteredText = newEnteredText;
+            var updateSuggestions = enteredText.toLowerCase().indexOf(newEnteredText.toLowerCase()) == -1
+            enteredText = newEnteredText
             if (updateSuggestions)
-                suggestionBox.setInputText(newEnteredText);
+                suggestionBox.setInputText(newEnteredText)
 
             // Update the location to go when no suggestion is selected.
-            manualLocation = backend.locationFromUserInput(newEnteredText);
+            manualLocation = backend.locationFromUserInput(newEnteredText)
 
             // Text was entered, don't bind to the webview/tab url changes.
-            boundToWebViewLocation = false;
+            boundToWebViewLocation = false
         }
 
         onAccepted: {
             container.urlEntered(currentLocation.destination, enteredText)
-            backend.tabManager.currentTab.webView.forceActiveFocus();
+            backend.tabManager.currentTab.webView.forceActiveFocus()
         }
 
         onActiveFocusChanged: {
             if (!activeFocus)
-                boundToWebViewLocation = true;
+                boundToWebViewLocation = true
         }
 
         Keys.onEscapePressed: {
@@ -183,11 +183,11 @@ Item {
                - When suggestionBox.selectedLocation != null
             */
             if (suggestionBox.selectedLocation)
-                suggestionBox.selectNone();
+                suggestionBox.selectNone()
             else if (!boundToWebViewLocation) {
-                boundToWebViewLocation = true;
+                boundToWebViewLocation = true
             } else
-                backend.tabManager.currentTab.webView.forceActiveFocus();
+                backend.tabManager.currentTab.webView.forceActiveFocus()
         }
         Keys.onUpPressed: { suggestionBox.selectPreviousItem() }
         Keys.onDownPressed: suggestionBox.selectNextItem()
@@ -223,9 +223,9 @@ Item {
         anchors.fill: parent
         onPressed: {
             if (!inputText.activeFocus)
-                focusAndSelect();
+                focusAndSelect()
             else
-                mouse.accepted = false;
+                mouse.accepted = false
         }
     }
 
@@ -238,7 +238,7 @@ Item {
         visible: inputText.activeFocus
         onLocationClicked: {
             container.urlEntered(location.destination, inputText.enteredText)
-            backend.tabManager.currentTab.webView.forceActiveFocus();
+            backend.tabManager.currentTab.webView.forceActiveFocus()
         }
     }
 }

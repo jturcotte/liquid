@@ -27,17 +27,17 @@ Item {
     width: 175
 
     function focusAndSelect() {
-        searchText.focus = true;
-        searchText.selectAll();
+        searchText.focus = true
+        searchText.selectAll()
     }
     function findPrevious() {
         if (!searchText.text)
-            focusAndSelect();
+            focusAndSelect()
         backend.tabManager.currentTab.webView.findPrevious(searchText.text)
     }
     function findNext() {
         if (!searchText.text)
-            focusAndSelect();
+            focusAndSelect()
         backend.tabManager.currentTab.webView.findNext(searchText.text)
     }
 
@@ -59,8 +59,8 @@ Item {
         MouseArea {
             anchors.fill: parent
             onPressed: {
-                expanded = true;
-                focusAndSelect();
+                expanded = true
+                focusAndSelect()
             }
         }
     }
@@ -77,9 +77,9 @@ Item {
         id: searchText
         function find(e) {
             if (e.modifiers & Qt.ShiftModifier)
-                findPrevious();
+                findPrevious()
             else
-                findNext();
+                findNext()
         }
         anchors {
             left: parent.left; right: closeIcon.left
@@ -87,14 +87,14 @@ Item {
             leftMargin: 5
         }
 
-        font.pixelSize: 14;
+        font.pixelSize: 14
         selectByMouse: true
         onTextChanged: backend.tabManager.currentTab.webView.findNext(text)
         Keys.onEnterPressed: find(event)
         Keys.onReturnPressed: find(event)
         Keys.onEscapePressed: {
-            expanded = false;
-            backend.tabManager.currentTab.webView.focus = true;
+            expanded = false
+            backend.tabManager.currentTab.webView.focus = true
         }
         onActiveFocusChanged: if (activeFocus) expanded = true
 
@@ -103,9 +103,9 @@ Item {
             anchors.fill: parent
             onPressed: {
                 if (!searchText.activeFocus)
-                    focusAndSelect();
+                    focusAndSelect()
                 else
-                    mouse.accepted = false;
+                    mouse.accepted = false
             }
         }
     }
@@ -117,9 +117,9 @@ Item {
         MouseArea {
             anchors.fill: parent
             onPressed: {
-                expanded = false;
+                expanded = false
                 if (searchText.focus)
-                    backend.tabManager.currentTab.webView.focus = true;
+                    backend.tabManager.currentTab.webView.focus = true
             }
         }
     }

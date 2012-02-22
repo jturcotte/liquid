@@ -39,7 +39,7 @@ TopTabsLayout {
         property double baseWeight: modelObject.baseWeight
         property double tabIndex: modelObject.index
         property int targetX: 0
-        property bool inInitialAnim: false;
+        property bool inInitialAnim: false
         property string title: modelObject.title
         width: expandedWidth
         height: parent.height + 2
@@ -48,8 +48,8 @@ TopTabsLayout {
         z: tabIndex
 
         Behavior on x { enabled: !inInitialAnim && !inResize; NumberAnimation {} }
-        Component.onCompleted: state = minimized ? "minimized" : "";
-        onBaseWeightChanged: layout();
+        Component.onCompleted: state = minimized ? "minimized" : ""
+        onBaseWeightChanged: layout()
         onMinimizedChanged: layout()
 
         BorderImage {
@@ -92,9 +92,9 @@ TopTabsLayout {
             acceptedButtons: Qt.LeftButton | Qt.MiddleButton
             onPressed: {
                 if (mouse.button == Qt.LeftButton)
-                    backend.tabManager.currentTab = modelObject;
+                    backend.tabManager.currentTab = modelObject
                 else if (mouse.button == Qt.MiddleButton)
-                    modelObject.close();
+                    modelObject.close()
             }
         }
         state: "preCreation"
@@ -128,14 +128,14 @@ TopTabsLayout {
         hoverEnabled: true
         anchors.fill: container
         onPositionChanged: {
-            var hitTest = container.childAt(mouseX, mouseY);
-            toolTipPos = Qt.point(mouseX, mouseY);
+            var hitTest = container.childAt(mouseX, mouseY)
+            toolTipPos = Qt.point(mouseX, mouseY)
             if (hitTest && hitTest.title)
-                toolTipText = hitTest.title;
+                toolTipText = hitTest.title
             else if (hitTest && hitTest.title === "")
-                toolTipText = "[No title]";
+                toolTipText = "[No title]"
             else
-                toolTipText = "";
+                toolTipText = ""
         }
         onExited: toolTipText = ""
     }

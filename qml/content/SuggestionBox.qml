@@ -27,28 +27,28 @@ Item {
     signal locationClicked(variant location)
 
     function selectPreviousItem() {
-        --_selectedIndex;
+        --_selectedIndex
         if (_selectedIndex <= -1)
-            _selectedIndex = -1;
+            _selectedIndex = -1
     }
     function selectNextItem() {
-        ++_selectedIndex;
+        ++_selectedIndex
         if (_selectedIndex >= historySuggestions.model.length + searchSuggestions.model.length)
-            _selectedIndex = historySuggestions.model.length + searchSuggestions.model.length - 1;
+            _selectedIndex = historySuggestions.model.length + searchSuggestions.model.length - 1
     }
     function selectNone() {
-        _selectedIndex = -1;
+        _selectedIndex = -1
     }
     function setInputText(text) {
-        backend.historyLocator.setQueryText(text);
-        backend.searchLocator.setQueryText(text);
-        _selectedIndex = -1;
+        backend.historyLocator.setQueryText(text)
+        backend.searchLocator.setQueryText(text)
+        _selectedIndex = -1
     }
 
     function selectedIndexForPanel(panel) {
         if (_panelOnTop != panel)
             return Math.max(-1, _selectedIndex - _panelOnTop.model.length)
-        return _selectedIndex;
+        return _selectedIndex
     }
     property int _selectedIndex: -1
     property Item _panelOnTop: searchOnTop ? searchSuggestions : historySuggestions
@@ -119,8 +119,8 @@ Item {
     } ]
 
     Component.onCompleted: {
-        backend.historyLocator.setQueryText("");
-        backend.searchLocator.setQueryText("");
+        backend.historyLocator.setQueryText("")
+        backend.searchLocator.setQueryText("")
     }
 }
 

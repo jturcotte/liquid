@@ -24,22 +24,22 @@ Rectangle {
     color: "#80000000"
 
     function show() {
-        authDialog.visible = true;
-        username.text = backend.machineUsername();
-        username.focus = true;
-        username.selectAll();
+        authDialog.visible = true
+        username.text = backend.machineUsername()
+        username.focus = true
+        username.selectAll()
     }
     function done() {
-        credentialsEntered(username.text, password.text);
-        username.text = "";
-        password.text = "";
-        authDialog.visible = false;
+        credentialsEntered(username.text, password.text)
+        username.text = ""
+        password.text = ""
+        authDialog.visible = false
     }
     function cancel() {
-        cancelled();
-        username.text = "";
-        password.text = "";
-        authDialog.visible = false;
+        cancelled()
+        username.text = ""
+        password.text = ""
+        authDialog.visible = false
     }
     signal credentialsEntered(string username, string password)
     signal cancelled()
