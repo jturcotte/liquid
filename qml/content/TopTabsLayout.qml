@@ -160,6 +160,10 @@ Item {
     Repeater {
         id: repeater
         onItemAdded: redistribute()
-        onItemRemoved: redistribute()
+        onItemRemoved: {
+            // The item isn't removed yet, make sure it doesn't take space.
+            item.layouted = false;
+            redistribute();
+        }
     }
 }
