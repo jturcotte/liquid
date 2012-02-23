@@ -86,22 +86,24 @@ void TabManager::setCurrentTab(Tab* tab)
 
 void TabManager::showNextTab()
 {
-    if (m_tabs.size() <= 1)
-        return;
-
     int currentTabIndex = m_tabs.indexOf(currentTab());
-    int tabIndex = currentTabIndex == m_tabs.size() - 1 ? 0 : currentTabIndex + 1;
-    setCurrentTab(static_cast<Tab*>(m_tabs.at(tabIndex)));
+    int tabIndex = currentTabIndex;
+    do
+        tabIndex = tabIndex == m_tabs.size() - 1 ? 0 : tabIndex + 1;
+    while (static_cast<Tab*>(m_tabs.at(tabIndex))->closed() && tabIndex != currentTabIndex);
+    if (tabIndex != currentTabIndex)
+        setCurrentTab(static_cast<Tab*>(m_tabs.at(tabIndex)));
 }
 
 void TabManager::showPreviousTab()
 {
-    if (m_tabs.size() <= 1)
-        return;
-
     int currentTabIndex = m_tabs.indexOf(currentTab());
-    int tabIndex = currentTabIndex == 0 ? m_tabs.size() - 1 : currentTabIndex - 1;
-    setCurrentTab(static_cast<Tab*>(m_tabs.at(tabIndex)));
+    int tabIndex = currentTabIndex;
+    do
+        tabIndex = tabIndex == 0 ? m_tabs.size() - 1 : tabIndex - 1;
+    while (static_cast<Tab*>(m_tabs.at(tabIndex))->closed() && tabIndex != currentTabIndex);
+    if (tabIndex != currentTabIndex)
+        setCurrentTab(static_cast<Tab*>(m_tabs.at(tabIndex)));
 }
 
 void TabManager::onTabClosed(Tab* tab)
