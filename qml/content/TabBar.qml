@@ -18,6 +18,7 @@
 */
 
 import QtQuick 1.1
+import liquid 1.0
 
 TopTabsLayout {
     id: container
@@ -138,5 +139,15 @@ TopTabsLayout {
                 toolTipText = ""
         }
         onExited: toolTipText = ""
+    }
+    MouseWheelArea {
+        z: -1
+        anchors.fill: container
+        onWheel: {
+            if (delta > 0)
+                backend.tabManager.showPreviousTab()
+            else
+                backend.tabManager.showNextTab()
+        }
     }
 }
