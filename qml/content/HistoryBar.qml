@@ -25,6 +25,8 @@ FanLayout {
     property variant toolTipPos
     property bool xBehaviorEnabled: true
     itemOverlap: 3
+    // Space for 4 items + adjustments.
+    width: (container.height - itemOverlap) * 4 + itemOverlap
 
     Connections {
         target: backend.tabManager

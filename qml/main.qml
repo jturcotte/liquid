@@ -145,7 +145,6 @@ Rectangle {
                 HistoryBar {
                     id: historyBar
                     anchors { top: parent.top; bottom: parent.bottom; left: parent.left; leftMargin: 3; topMargin: 6; bottomMargin: 6 }
-                    width: 150
                 }
 
                 LocationBar {
