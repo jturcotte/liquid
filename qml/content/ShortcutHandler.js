@@ -67,19 +67,19 @@ function actionForEvent(key, modifiers) {
         return _bareShortcuts[key]
 }
 
-var _handlers = new Object;
+var _handlers = new Object
 function setHandler(actionName, handler) {
-    _handlers[actionName] = handler;
+    _handlers[actionName] = handler
 }
 
 function handleShortcut(key, modifiers) {
-    var actionName = actionForEvent(key, modifiers);
-    var handler = _handlers[actionName];
+    var actionName = actionForEvent(key, modifiers)
+    var handler = _handlers[actionName]
     if (handler)
-        handler();
+        handler()
     else if (actionName)
-        console.log("ShortcutHandler: No registered handler for action [" + actionName + "]");
+        console.log("ShortcutHandler: No registered handler for action [" + actionName + "]")
     else
-        return false;
-    return true;
+        return false
+    return true
 }

@@ -32,7 +32,7 @@ Rectangle {
         locationBar.focusAndSelect()
     }
     function handleShortcut(key, modifiers) {
-        return ShortcutHandler.handleShortcut(key, modifiers);
+        return ShortcutHandler.handleShortcut(key, modifiers)
     }
 
     width: 800; height: 600
