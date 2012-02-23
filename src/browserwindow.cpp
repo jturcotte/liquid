@@ -24,6 +24,9 @@
 #include <QGraphicsObject>
 #include <QKeyEvent>
 #include "backend.h"
+#include "qdeclarativewebview_p.h"
+#include "tab.h"
+#include "tabmanager.h"
 #include "dwmhelper.h"
 
 BrowserWindow::BrowserWindow()
@@ -65,6 +68,20 @@ void BrowserWindow::keyPressEvent(QKeyEvent* event)
         loadQml();
     else if (!handleShortcut(event))
         QDeclarativeView::keyPressEvent(event);
+}
+
+void BrowserWindow::mousePressEvent(QMouseEvent* event)
+{
+    if (m_backend->tabManager()->currentTab()) {
+        if (event->button() == Qt::XButton1) {
+            m_backend->tabManager()->currentTab()->webView()->backAction()->trigger();
+            return;
+        } else if (event->button() == Qt::XButton2) {
+            m_backend->tabManager()->currentTab()->webView()->forwardAction()->trigger();
+            return;
+        }
+    }
+    QDeclarativeView::mousePressEvent(event);
 }
 
 bool BrowserWindow::handleShortcut(QKeyEvent* event)

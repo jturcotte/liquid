@@ -34,6 +34,7 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent* event);
+    virtual void mousePressEvent(QMouseEvent* event);
 
 private:
     bool handleShortcut(QKeyEvent* event);
