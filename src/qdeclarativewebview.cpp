@@ -93,7 +93,8 @@ GraphicsWebView::GraphicsWebView(QDeclarativeWebView* parent)
 void GraphicsWebView::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsWebView::mousePressEvent(event);
-    static_cast<QDeclarativeWebPage*>(page())->setLastPressedButton(event->button());
+    bool openInNewWindow = event->button() == Qt::MiddleButton || (event->button() == Qt::LeftButton && event->modifiers().testFlag(Qt::ControlModifier));
+    static_cast<QDeclarativeWebPage*>(page())->setOpenNextNavigationInNewWindow(openInNewWindow);
 }
 
 /*!
@@ -828,7 +829,7 @@ QRect QDeclarativeWebView::elementAreaAt(int x, int y, int maxWidth, int maxHeig
 */
 QDeclarativeWebPage::QDeclarativeWebPage(QObject* parent)
     : QWebPage(parent)
-    , lastPressedButton(Qt::NoButton)
+    , openNextNavigationInNewWindow(false)
 {
 }
 
@@ -878,7 +879,7 @@ bool QDeclarativeWebPage::javaScriptPrompt(QWebFrame* originatingFrame, const QS
 
 bool QDeclarativeWebPage::acceptNavigationRequest(QWebFrame *, const QNetworkRequest &request, QWebPage::NavigationType type)
 {
-    if (type == QWebPage::NavigationTypeLinkClicked && lastPressedButton == Qt::MiddleButton) {
+    if (type == QWebPage::NavigationTypeLinkClicked && openNextNavigationInNewWindow) {
         createBackgroundWindow(WebBrowserWindow)->mainFrame()->load(request.url());
         return false;
     }

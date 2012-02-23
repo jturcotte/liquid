@@ -49,7 +49,7 @@ class QDeclarativeWebPage : public QWebPage {
 public:
     explicit QDeclarativeWebPage(QObject *parent);
     ~QDeclarativeWebPage();
-    void setLastPressedButton(Qt::MouseButton button) { lastPressedButton = button; }
+    void setOpenNextNavigationInNewWindow(bool enabled) { openNextNavigationInNewWindow = enabled; }
 protected:
     QWebPage *createWindow(WebWindowType type);
     virtual QWebPage *createBackgroundWindow(WebWindowType type) { return createWindow(type); }
@@ -61,7 +61,7 @@ protected:
 
 private:
     QDeclarativeWebView *viewItem();
-    Qt::MouseButton lastPressedButton;
+    bool openNextNavigationInNewWindow;
 };
 
 class GraphicsWebView : public QGraphicsWebView {
