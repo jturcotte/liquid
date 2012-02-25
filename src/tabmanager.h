@@ -22,6 +22,7 @@
 
 #include "qobjectlistmodel.h"
 #include <QDeclarativeImageProvider>
+#include <QBasicTimer>
 #include <QLinkedList>
 #include <QUrl>
 
@@ -74,10 +75,15 @@ public:
     Q_INVOKABLE void showNextTab();
     Q_INVOKABLE void showPreviousTab();
     void onTabClosed(Tab* tab);
+    void saveTabs();
+    bool restoreTabs();
     void initializeEngine(QDeclarativeEngine *engine);
 
 signals:
     void currentTabChanged();
+
+protected:
+    void timerEvent(QTimerEvent* event);
 
 private:
     Backend* m_backend;
@@ -86,6 +92,8 @@ private:
     TabsImageProvider* m_tabsImageProvider;
     QDeclarativeEngine* m_engine;
     TabStats m_tabStats;
+    QBasicTimer m_saveTabsDeferTimer;
+    bool m_saveTabsPending;
 };
 
 #endif // TABMANAGER_H

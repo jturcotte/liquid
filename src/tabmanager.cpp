@@ -23,10 +23,17 @@
 #include "historyitem.h"
 #include <cfloat>
 #include <cmath>
+#include <QDesktopServices>
 #include <QtDeclarative/qdeclarativeengine.h>
 
 static const int aliveTabsLimit = 30;
 static const int closedTabsLimit = 5;
+
+static QString tabsBackupPath()
+{
+    return QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/tabs.dat";
+}
+
 
 TabsImageProvider::TabsImageProvider(TabManager* tabManager)
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
@@ -72,6 +79,7 @@ TabManager::TabManager(Backend* backend)
     , m_backend(backend)
     , m_tabsImageProvider(new TabsImageProvider(this))
     , m_engine(0)
+    , m_saveTabsPending(false)
 {
 }
 
@@ -82,6 +90,7 @@ void TabManager::setCurrentTab(Tab* tab)
     m_lastCurrentTabs.removeAll(tab);
     m_lastCurrentTabs.append(tab);
     emit currentTabChanged();
+    saveTabs();
 }
 
 void TabManager::showNextTab()
@@ -131,6 +140,70 @@ void TabManager::onTabClosed(Tab* tab)
         Q_ASSERT(numClosedTabs == closedTabsLimit + 1);
         m_tabs.removeAt(cheapestClosedTabIndex);
     }
+    saveTabs();
+}
+
+void TabManager::saveTabs()
+{
+    if (m_saveTabsDeferTimer.isActive()) {
+        m_saveTabsPending = true;
+        return;
+    }
+
+    QFile file(tabsBackupPath());
+    file.open(QIODevice::WriteOnly);
+    QDataStream out(&file);
+
+    out << m_tabs.size();
+    out << m_tabs.indexOf(currentTab());
+
+    // FIXME: Save the navigation history and the tab stats as well.
+    for (int i = 0; i < m_tabs.size(); ++i) {
+        Tab* tab = static_cast<Tab*>(m_tabs.at(i));
+        out << tab->url().toEncoded();
+        out << tab->closed();
+    }
+
+    m_saveTabsDeferTimer.start(10000, this);
+    m_saveTabsPending = false;
+}
+
+bool TabManager::restoreTabs()
+{
+    QFile file(tabsBackupPath());
+    if (!file.open(QIODevice::ReadOnly))
+        return false;
+    QDataStream in(&file);
+
+    int numTabs, currentTabIndex;
+    in >> numTabs;
+    in >> currentTabIndex;
+
+    QVector<std::pair<QUrl, bool> > unserialized(numTabs);
+    for (int i = 0; i < unserialized.size(); ++i) {
+        in >> unserialized[i].first;
+        in >> unserialized[i].second;
+    }
+    if (in.status() != QDataStream::Ok) {
+        qWarning("WARNING: Corrupted persisted tabs file, ignoring.");
+        return false;
+    }
+
+    // Do the restore, start the save deferrer to prevent saving an incomplete state.
+    m_saveTabsDeferTimer.start(10000, this);
+    for (int i = 0; i < unserialized.size(); ++i) {
+        Tab* tab = new Tab(unserialized[i].first, i, this, unserialized[i].second);
+        m_tabs.append(tab);
+        // Artificially fill the stack of current tabs.
+        if (!tab->closed())
+            m_lastCurrentTabs.append(tab);
+    }
+
+    // Set the real current tab.
+    if (currentTabIndex >= 0 && currentTabIndex < m_tabs.size())
+        m_lastCurrentTabs.append(static_cast<Tab*>(m_tabs.at(currentTabIndex)));
+    emit currentTabChanged();
+    return true;
 }
 
 void TabManager::initializeEngine(QDeclarativeEngine *engine)
@@ -180,5 +253,17 @@ Tab* TabManager::addNewTab(Tab* parentTab, QUrl url)
         if (cheapestTab)
             cheapestTab->close();
     }
+    saveTabs();
     return newTab;
+}
+
+void TabManager::timerEvent(QTimerEvent* event)
+{
+    if (event->timerId() != m_saveTabsDeferTimer.timerId()) {
+        QObject::timerEvent(event);
+        return;
+    }
+    m_saveTabsDeferTimer.stop();
+    if (m_saveTabsPending)
+        saveTabs();
 }

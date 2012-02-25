@@ -55,13 +55,14 @@ class Tab : public QObject
     Q_PROPERTY(double index READ index CONSTANT)
 
 public:
-    explicit Tab(const QUrl& url, double index, TabManager* manager, QObject* parent = 0);
+    explicit Tab(const QUrl& url, double index, TabManager* manager, bool closed = false, QObject* parent = 0);
     ~Tab();
 
     double index() const { return m_index; }
     TabManager* manager() const { return m_manager; }
     WebView* webView();
     QString title() const { return m_webView ? m_webView->title() : m_lastTitle; }
+    QUrl url() const { return m_webView ? m_webView->url() : m_pendingUrl; }
     bool closed() const { return !m_webView; }
     QUrl iconSource() const;
     double baseWeight();

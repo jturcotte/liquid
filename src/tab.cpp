@@ -59,7 +59,7 @@ bool WebPage::extension(Extension, const ExtensionOption* option, ExtensionRetur
 }
 
 
-Tab::Tab(const QUrl& url, double index, TabManager* manager, QObject* parent)
+Tab::Tab(const QUrl& url, double index, TabManager* manager, bool closed, QObject* parent)
     : QObject(parent)
     , m_pendingUrl(url)
     , m_index(index)
@@ -70,8 +70,8 @@ Tab::Tab(const QUrl& url, double index, TabManager* manager, QObject* parent)
     , m_storedVisit(false)
 {
     connect(m_manager->tabStats(), SIGNAL(valuesChanged()), SIGNAL(baseWeightChanged()));
-    // Ensure we're not in a closed state on creation.
-    webView();
+    if (!closed)
+        webView();
 }
 
 Tab::~Tab()
@@ -178,6 +178,7 @@ void Tab::webViewDestroyed()
 void Tab::onNavigation()
 {
     m_manager->tabStats()->onTabNavigated(this);
+    m_manager->saveTabs();
 }
 
 void Tab::onLoadStarted()

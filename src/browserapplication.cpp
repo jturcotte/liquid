@@ -91,10 +91,12 @@ BrowserApplication::BrowserApplication(int &argc, char **argv)
         return;
     }
 
+    bool restoredTabs = m_window.restoreTabs();
     QUrl paramUrl = QUrl::fromUserInput(args);
-    if (!paramUrl.isValid())
-        paramUrl = QUrl("http://google.com");
-    m_window.addNewTab(paramUrl);
+    if (paramUrl.isValid())
+        m_window.addNewTab(paramUrl);
+    else if (!restoredTabs)
+        m_window.addNewTab(QUrl("http://google.com"));
     m_window.show();
 }
 

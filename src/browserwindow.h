@@ -31,6 +31,7 @@ class BrowserWindow : public QDeclarativeView {
 public:
     BrowserWindow();
     void addNewTab(const QUrl& url);
+    bool restoreTabs();
 
 protected:
     virtual void keyPressEvent(QKeyEvent* event);

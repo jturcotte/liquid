@@ -62,6 +62,11 @@ void BrowserWindow::addNewTab(const QUrl& url)
     rootObject()->metaObject()->invokeMethod(rootObject(), "addNewTab", Qt::DirectConnection, Q_ARG(QVariant, url));
 }
 
+bool BrowserWindow::restoreTabs()
+{
+    return m_backend->tabManager()->restoreTabs();
+}
+
 void BrowserWindow::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_F12)
