@@ -22,13 +22,12 @@
 
 #include <QObject>
 #include "tab.h"
-#include "location.h"
 
 class HistoryItem : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QUrl iconSource READ iconSource NOTIFY iconSourceChanged)
-    Q_PROPERTY(Location* location READ location CONSTANT)
+    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(int relativeIndex READ relativeIndex NOTIFY relativeIndexChanged)
 
 public:
@@ -36,8 +35,7 @@ public:
 
     Q_INVOKABLE void goTo();
     QUrl iconSource();
-    QPixmap icon();
-    Location* location() { return &m_location; }
+    QString title();
     int relativeIndex() const;
 
     void checkIcon();
@@ -46,12 +44,13 @@ public:
 signals:
     void indexChanged();
     void iconSourceChanged();
+    void titleChanged();
     void relativeIndexChanged();
 
 private:
     int m_qWebHistoryIndex;
     Tab* m_tab;
-    Location m_location;
+    friend class Tab;
 };
 
 #endif // HISTORYITEM_H

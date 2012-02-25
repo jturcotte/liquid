@@ -167,7 +167,7 @@ void Tab::updateTitle()
         m_manager->backend()->historyDatabase()->updateTitleForUrl(m_webView->title(), m_webView->url());
     m_lastTitle = m_webView->title();
     if (m_currentHistoryItem)
-        m_currentHistoryItem->location()->setTitle(m_webView->title());
+        emit m_currentHistoryItem->titleChanged();
 }
 
 void Tab::webViewDestroyed()

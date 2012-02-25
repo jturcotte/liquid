@@ -39,7 +39,7 @@ FanLayout {
 
     delegate: Item {
         id: historyItem
-        property string title: modelObject.location.title
+        property string title: modelObject.title
         property int targetX: container.width
         x: targetX
         Behavior on x { enabled: xBehaviorEnabled; NumberAnimation {} }

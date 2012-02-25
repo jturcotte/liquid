@@ -23,10 +23,6 @@ HistoryItem::HistoryItem(int qWebHistoryIndex, Tab* tab, QObject* parent)
     : QObject(parent)
     , m_qWebHistoryIndex(qWebHistoryIndex)
     , m_tab(tab)
-    , m_location(m_tab->webView()->history()->itemAt(m_qWebHistoryIndex).url(),
-        m_tab->webView()->history()->itemAt(m_qWebHistoryIndex).url().toString(),
-        m_tab->webView()->history()->itemAt(m_qWebHistoryIndex).title(),
-        Location::HistoryType)
 {
 }
 
@@ -37,13 +33,13 @@ void HistoryItem::goTo()
 
 QUrl HistoryItem::iconSource()
 {
-    QUrl url = m_location.destination();
+    QUrl url = m_tab->webView()->history()->itemAt(m_qWebHistoryIndex).url();
     return (!QWebSettings::iconForUrl(url).isNull()) ? QUrl("image://tabs/" + url.toEncoded()) : QUrl("image://tabs/defaultIcon");
 }
 
-QPixmap HistoryItem::icon()
+QString HistoryItem::title()
 {
-    return QWebSettings::iconForUrl(m_location.destination()).pixmap(QSize(16, 16));
+    return m_tab->webView()->history()->itemAt(m_qWebHistoryIndex).title();
 }
 
 void HistoryItem::checkIcon()
@@ -54,6 +50,7 @@ void HistoryItem::checkIcon()
 void HistoryItem::checkRelativeIndex()
 {
     emit relativeIndexChanged();
+    emit titleChanged();
 }
 
 int HistoryItem::relativeIndex() const
