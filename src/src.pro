@@ -19,6 +19,7 @@ SOURCES += \
     searchlocator.cpp \
     singleapplication.cpp \
     tab.cpp \
+    tabhistorylistmodel.cpp \
     tabmanager.cpp \
     main.cpp \
 
@@ -38,5 +39,6 @@ HEADERS += \
     searchlocator.h \
     singleapplication.h \
     tab.h \
+    tabhistorylistmodel.h \
     tabmanager.h \
 

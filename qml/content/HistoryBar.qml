@@ -52,9 +52,9 @@ FanLayout {
             anchors.fill: parent
             anchors { bottomMargin: -3; topMargin: -3; leftMargin: -3; rightMargin: -3 }
             border { left: 13; top: 13; right: 13; bottom: 13 }
-            source: modelObject.relativeIndex == 0 ? "pics/card-border.png" : "pics/card-border-inactive.png"
-            horizontalTileMode: BorderImage.Repeat
-            verticalTileMode: BorderImage.Repeat
+            source: modelObject.linking ? "pics/card-border-linking.png"
+                : modelObject.current ? "pics/card-border.png"
+                : "pics/card-border-inactive.png"
         }
 
         property bool layouted: true
@@ -77,7 +77,7 @@ FanLayout {
         }
 
         Component.onCompleted: {
-            if (modelObject.relativeIndex == 0)
+            if (modelObject.current)
                 rightAlignedItem = historyItem
         }
     }

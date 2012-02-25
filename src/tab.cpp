@@ -59,7 +59,7 @@ bool WebPage::extension(Extension, const ExtensionOption* option, ExtensionRetur
 }
 
 
-Tab::Tab(const QUrl& url, double index, TabManager* manager, bool closed, QObject* parent)
+Tab::Tab(const QUrl& url, double index, Tab* parentTab, TabManager* manager, bool closed, QObject* parent)
     : QObject(parent)
     , m_pendingUrl(url)
     , m_index(index)
@@ -67,9 +67,16 @@ Tab::Tab(const QUrl& url, double index, TabManager* manager, bool closed, QObjec
     , m_webPage(0)
     , m_webView(0)
     , m_currentHistoryItem(0)
+    , m_parentTab(parentTab)
+    , m_parentTabHistoryItem(parentTab ? new ParentTabHistoryItem(this, parentTab) : 0)
     , m_storedVisit(false)
 {
     connect(m_manager->tabStats(), SIGNAL(valuesChanged()), SIGNAL(baseWeightChanged()));
+    if (parentTab) {
+        connect(parentTab, SIGNAL(closedChanged()), SLOT(onParentTabClosedChanged()));
+        connect(parentTab, SIGNAL(destroyed(QObject*)), SLOT(onParentTabDestroyed()));
+    }
+    m_history.setParentTabHistoryItem(m_parentTabHistoryItem.data());
     if (!closed)
         webView();
 }
@@ -210,4 +217,17 @@ void Tab::onIconChanged()
     // Not efficient, but should do.
     for (int i = 0; i < m_history.size(); ++i)
         static_cast<HistoryItem*>(m_history[i])->checkIcon();
+}
+
+void Tab::onParentTabClosedChanged()
+{
+    m_parentTabHistoryItem.reset(m_parentTab->closed() ? 0 : new ParentTabHistoryItem(this, m_parentTab));
+    m_history.setParentTabHistoryItem(m_parentTabHistoryItem.data());
+}
+
+void Tab::onParentTabDestroyed()
+{
+    m_history.setParentTabHistoryItem(0);
+    m_parentTabHistoryItem.reset();
+    m_parentTab = 0;
 }

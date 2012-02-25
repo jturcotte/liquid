@@ -28,7 +28,8 @@ class HistoryItem : public QObject
     Q_OBJECT
     Q_PROPERTY(QUrl iconSource READ iconSource NOTIFY iconSourceChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
-    Q_PROPERTY(int relativeIndex READ relativeIndex NOTIFY relativeIndexChanged)
+    Q_PROPERTY(bool current READ current NOTIFY currentChanged)
+    Q_PROPERTY(bool linking READ linking CONSTANT)
 
 public:
     HistoryItem(int qWebHistoryIndex, Tab* tab, QObject* parent = 0);
@@ -36,21 +37,50 @@ public:
     Q_INVOKABLE void goTo();
     QUrl iconSource();
     QString title();
-    int relativeIndex() const;
+    bool current() const;
+    bool linking() const { return false; }
 
     void checkIcon();
     void checkRelativeIndex();
 
 signals:
-    void indexChanged();
     void iconSourceChanged();
     void titleChanged();
-    void relativeIndexChanged();
+    void currentChanged();
 
 private:
     int m_qWebHistoryIndex;
     Tab* m_tab;
     friend class Tab;
+};
+
+class ParentTabHistoryItem : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QUrl iconSource READ iconSource NOTIFY iconSourceChanged)
+    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+    Q_PROPERTY(bool current READ current CONSTANT)
+    Q_PROPERTY(bool linking READ linking CONSTANT)
+
+public:
+    ParentTabHistoryItem(Tab* tab, Tab* parentTab, QObject* parent = 0);
+
+    Q_INVOKABLE void goTo();
+    QUrl iconSource();
+    QString title();
+    bool current() const { return false; }
+    bool linking() const { return true; }
+
+    void checkIcon();
+    void checkRelativeIndex();
+
+signals:
+    void iconSourceChanged();
+    void titleChanged();
+
+private:
+    Tab* m_tab;
+    Tab* m_parentTab;
 };
 
 #endif // HISTORYITEM_H

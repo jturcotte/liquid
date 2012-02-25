@@ -21,7 +21,7 @@
 #define TAB_H
 
 #include "qdeclarativewebview_p.h"
-#include "qobjectlistmodel.h"
+#include "tabhistorylistmodel.h"
 #include <QWebHistory>
 
 class TabManager;
@@ -47,7 +47,7 @@ class Tab : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QDeclarativeWebView* webView READ webView CONSTANT)
-    Q_PROPERTY(QObjectListModel* history READ history NOTIFY historyChanged)
+    Q_PROPERTY(TabHistoryListModel* history READ history NOTIFY historyChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QUrl iconSource READ iconSource NOTIFY iconSourceChanged)
     Q_PROPERTY(double baseWeight READ baseWeight NOTIFY baseWeightChanged)
@@ -55,7 +55,7 @@ class Tab : public QObject
     Q_PROPERTY(double index READ index CONSTANT)
 
 public:
-    explicit Tab(const QUrl& url, double index, TabManager* manager, bool closed = false, QObject* parent = 0);
+    explicit Tab(const QUrl& url, double index, Tab* parentTab, TabManager* manager, bool closed = false, QObject* parent = 0);
     ~Tab();
 
     double index() const { return m_index; }
@@ -66,7 +66,7 @@ public:
     bool closed() const { return !m_webView; }
     QUrl iconSource() const;
     double baseWeight();
-    QObjectListModel* history() { return &m_history; }
+    TabHistoryListModel* history() { return &m_history; }
     Q_INVOKABLE void loadUrl(const QUrl& url, const QString& typedText);
     Q_INVOKABLE void close();
 
@@ -86,6 +86,8 @@ private slots:
     void onLoadStarted();
     void onLoadFinished();
     void onIconChanged();
+    void onParentTabClosedChanged();
+    void onParentTabDestroyed();
 
 private:
     QUrl m_pendingUrl;
@@ -95,8 +97,10 @@ private:
     TabManager* m_manager;
     WebPage* m_webPage;
     WebView* m_webView;
-    QObjectListModel m_history;
+    TabHistoryListModel m_history;
     HistoryItem* m_currentHistoryItem;
+    Tab* m_parentTab;
+    QScopedPointer<ParentTabHistoryItem> m_parentTabHistoryItem;
     bool m_storedVisit;
 };
 

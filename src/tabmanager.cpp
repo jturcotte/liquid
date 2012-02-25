@@ -192,7 +192,7 @@ bool TabManager::restoreTabs()
     // Do the restore, start the save deferrer to prevent saving an incomplete state.
     m_saveTabsDeferTimer.start(10000, this);
     for (int i = 0; i < unserialized.size(); ++i) {
-        Tab* tab = new Tab(unserialized[i].first, i, this, unserialized[i].second);
+        Tab* tab = new Tab(unserialized[i].first, i, 0, this, unserialized[i].second);
         m_tabs.append(tab);
         // Artificially fill the stack of current tabs.
         if (!tab->closed())
@@ -227,7 +227,7 @@ Tab* TabManager::addNewTab(Tab* parentTab, QUrl url)
     } else if (!m_tabs.isEmpty())
         newTabIndex = static_cast<Tab*>(m_tabs.last())->index() + 1;
 
-    Tab* newTab = new Tab(url, newTabIndex, this);
+    Tab* newTab = new Tab(url, newTabIndex, parentTab, this);
     m_tabs.insert(newTabPos, newTab);
 
     // Check if we passed the limit of tabs.

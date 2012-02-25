@@ -49,11 +49,44 @@ void HistoryItem::checkIcon()
 
 void HistoryItem::checkRelativeIndex()
 {
-    emit relativeIndexChanged();
+    emit currentChanged();
     emit titleChanged();
 }
 
-int HistoryItem::relativeIndex() const
+bool HistoryItem::current() const
 {
-    return m_tab->webView()->history()->currentItemIndex() - m_qWebHistoryIndex;
+    return 0 == m_tab->webView()->history()->currentItemIndex() - m_qWebHistoryIndex;
+}
+
+#include "tabmanager.h"
+ParentTabHistoryItem::ParentTabHistoryItem(Tab* tab, Tab* parentTab, QObject* parent)
+    : QObject(parent)
+    , m_tab(tab)
+    , m_parentTab(parentTab)
+{
+}
+
+void ParentTabHistoryItem::goTo()
+{
+    m_tab->manager()->setCurrentTab(m_parentTab);
+    m_tab->close();
+}
+
+QUrl ParentTabHistoryItem::iconSource()
+{
+    QUrl url = m_parentTab->webView()->url();
+    return (!QWebSettings::iconForUrl(url).isNull()) ? QUrl("image://tabs/" + url.toEncoded()) : QUrl("image://tabs/defaultIcon");
+}
+
+QString ParentTabHistoryItem::title()
+{
+    return QLatin1String("[Close and return to the parent tab]");
+}
+
+void ParentTabHistoryItem::checkIcon()
+{
+}
+
+void ParentTabHistoryItem::checkRelativeIndex()
+{
 }

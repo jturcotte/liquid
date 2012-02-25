@@ -33,6 +33,7 @@ int main(int argc, char** argv)
 {
     qmlRegisterType<Tab>();
     qmlRegisterType<QObjectListModel>();
+    qmlRegisterType<TabHistoryListModel>();
     qmlRegisterType<TabManager>();
     qmlRegisterType<HistoryLocator>();
     qmlRegisterType<SearchLocator>();
