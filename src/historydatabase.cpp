@@ -20,7 +20,7 @@
 #include "historydatabase.h"
 
 #include "location.h"
-#include <QCoreApplication>
+#include <QDesktopServices>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QUrl>
@@ -29,8 +29,8 @@
 HistoryDatabase::HistoryDatabase()
     : m_db(QSqlDatabase::addDatabase("QSQLITE"))
 {
-    // FIXME: Put the database in the settings directory.
-    m_db.setDatabaseName(QCoreApplication::applicationDirPath() + QLatin1String("/history.db"));
+    QString databasePath = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QLatin1String("/history.db");
+    m_db.setDatabaseName(databasePath);
     if (!m_db.open())
         qFatal("Can't open database.");
     m_db.exec("CREATE TABLE IF NOT EXISTS visited_pages ("
