@@ -121,8 +121,7 @@ WebView* Tab::webView()
 
 QUrl Tab::iconSource() const
 {
-    QUrl url = m_webView ? m_webView->url() : m_pendingUrl;
-    return (!QWebSettings::iconForUrl(url).isNull()) ? QUrl("image://tabs/" + url.toEncoded()) : QUrl("image://tabs/defaultIcon");
+    return TabsImageProvider::iconSourceForUrl(m_webView ? m_webView->url() : m_pendingUrl);
 }
 
 double Tab::baseWeight()

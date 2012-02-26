@@ -35,9 +35,8 @@ static QString tabsBackupPath()
 }
 
 
-TabsImageProvider::TabsImageProvider(TabManager* tabManager)
+TabsImageProvider::TabsImageProvider()
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
-    , m_tabManager(tabManager)
 {
 }
 
@@ -47,11 +46,23 @@ QPixmap TabsImageProvider::requestPixmap(const QString &id, QSize *size, const Q
     if (id == "defaultIcon")
         icon = QWebSettings::webGraphic(QWebSettings::DefaultFrameIconGraphic);
     else {
-        QUrl originalUrl = QUrl(id);
+        QUrl originalUrl = QUrl::fromEncoded(id.toLatin1());
         icon = QWebSettings::iconForUrl(originalUrl).pixmap(16);
     }
     *size = icon.size();
     return requestedSize.isValid() ? icon.scaled(requestedSize) : icon;
+}
+
+QUrl TabsImageProvider::iconSourceForUrl(const QUrl& originalUrl)
+{
+    QUrl url(originalUrl);
+    bool hasIcon = !QWebSettings::iconForUrl(url).isNull();
+    if (!hasIcon) {
+        // The icon database isn't updated when navigating within the same document, try without the fragment in that case.
+        url.setFragment(QString());
+        hasIcon = !QWebSettings::iconForUrl(url).isNull();
+    }
+    return hasIcon ? QUrl("image://tabs/" + url.toEncoded()) : QUrl("image://tabs/defaultIcon");
 }
 
 double TabStats::valueForTab(Tab* tab)
@@ -77,7 +88,7 @@ void TabStats::onTabNavigated(Tab* tab)
 TabManager::TabManager(Backend* backend)
     : QObject(backend)
     , m_backend(backend)
-    , m_tabsImageProvider(new TabsImageProvider(this))
+    , m_tabsImageProvider(new TabsImageProvider)
     , m_engine(0)
     , m_saveTabsPending(false)
 {

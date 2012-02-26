@@ -18,6 +18,7 @@
 */
 
 #include "historyitem.h"
+#include "tabmanager.h"
 
 HistoryItem::HistoryItem(int qWebHistoryIndex, Tab* tab, QObject* parent)
     : QObject(parent)
@@ -33,8 +34,7 @@ void HistoryItem::goTo()
 
 QUrl HistoryItem::iconSource()
 {
-    QUrl url = m_tab->webView()->history()->itemAt(m_qWebHistoryIndex).url();
-    return (!QWebSettings::iconForUrl(url).isNull()) ? QUrl("image://tabs/" + url.toEncoded()) : QUrl("image://tabs/defaultIcon");
+    return TabsImageProvider::iconSourceForUrl(m_tab->webView()->history()->itemAt(m_qWebHistoryIndex).url());
 }
 
 QString HistoryItem::title()
@@ -74,8 +74,7 @@ void ParentTabHistoryItem::goTo()
 
 QUrl ParentTabHistoryItem::iconSource()
 {
-    QUrl url = m_parentTab->webView()->url();
-    return (!QWebSettings::iconForUrl(url).isNull()) ? QUrl("image://tabs/" + url.toEncoded()) : QUrl("image://tabs/defaultIcon");
+    return TabsImageProvider::iconSourceForUrl(m_parentTab->url());
 }
 
 QString ParentTabHistoryItem::title()

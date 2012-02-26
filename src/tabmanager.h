@@ -34,11 +34,9 @@ class QDeclarativeEngine;
 class TabsImageProvider : public QDeclarativeImageProvider
 {
 public:
-    TabsImageProvider(TabManager* tabManager);
+    TabsImageProvider();
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
-
-private:
-    TabManager* m_tabManager;
+    static QUrl iconSourceForUrl(const QUrl& url);
 };
 
 
