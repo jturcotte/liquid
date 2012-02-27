@@ -241,6 +241,13 @@ Tab* TabManager::addNewTab(Tab* parentTab, QUrl url)
     Tab* newTab = new Tab(url, newTabIndex, parentTab, this);
     m_tabs.insert(newTabPos, newTab);
 
+    // Insert the new tab right before the current tab in the current tabs stack.
+    if (m_lastCurrentTabs.isEmpty()) {
+        m_lastCurrentTabs.insert(m_lastCurrentTabs.end(), newTab);
+        emit currentTabChanged();
+    } else
+        m_lastCurrentTabs.insert(--m_lastCurrentTabs.end(), newTab);
+
     // Check if we passed the limit of tabs.
     double cheapestWeight;
     Tab* cheapestTab;
