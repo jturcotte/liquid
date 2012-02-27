@@ -20,7 +20,6 @@
 #include "backend.h"
 
 #include <QAuthenticator>
-#include <QCoreApplication>
 #include <QDesktopServices>
 #include <QNetworkProxyFactory>
 #include <QNetworkReply>
@@ -74,21 +73,6 @@ QString Backend::machineUsername()
 
 void Backend::initializeEngine(QDeclarativeEngine *engine)
 {
-    QCoreApplication::setOrganizationName(QLatin1String("liquid"));
-    QCoreApplication::setApplicationName(QLatin1String("liquid"));
-
-    QWebSettings* settings = QWebSettings::globalSettings();
-    settings->setAttribute(QWebSettings::DnsPrefetchEnabled, true);
-    settings->setAttribute(QWebSettings::PluginsEnabled, false);
-    settings->setAttribute(QWebSettings::JavascriptCanOpenWindows, true);
-    settings->setAttribute(QWebSettings::JavascriptCanAccessClipboard, true);
-    settings->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-    settings->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, true);
-    settings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, true);
-    settings->setAttribute(QWebSettings::LocalStorageEnabled, true);
-    settings->setAttribute(QWebSettings::AcceleratedCompositingEnabled, true);
-    QWebSettings::enablePersistentStorage();
-
     QString cookieJarPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/cookiejar.dat";
     engine->networkAccessManager()->setCookieJar(new CookieJar(cookieJarPath, engine->networkAccessManager()));
     connect(engine->networkAccessManager(), SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)), SLOT(requestCredentials(QNetworkReply*, QAuthenticator*)));

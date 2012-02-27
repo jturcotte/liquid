@@ -28,6 +28,7 @@
 #include "searchlocator.h"
 #include "tab.h"
 #include "tabmanager.h"
+#include <QCoreApplication>
 
 int main(int argc, char** argv)
 {
@@ -42,6 +43,9 @@ int main(int argc, char** argv)
     qmlRegisterType<QDeclarativeWebView>("liquid", 1, 0, "WebView");
     qmlRegisterType<Location>("liquid", 1, 0, "Location");
     qmlRegisterType<MouseWheelArea>("liquid", 1, 0, "MouseWheelArea");
+
+    QCoreApplication::setOrganizationName(QLatin1String("liquid"));
+    QCoreApplication::setApplicationName(QLatin1String("liquid"));
 
     BrowserApplication app(argc, argv);
     if (!app.isRunning())

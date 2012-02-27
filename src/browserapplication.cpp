@@ -65,6 +65,7 @@
 
 #include <qlocalsocket.h>
 #include <QFileOpenEvent>
+#include <QWebSettings>
 
 #ifdef Q_OS_WIN
 #pragma comment(lib, "User32.lib")
@@ -90,6 +91,18 @@ BrowserApplication::BrowserApplication(int &argc, char **argv)
         qFatal("Could not start the SingleApplication server. Fix it.");
         return;
     }
+
+    QWebSettings* settings = QWebSettings::globalSettings();
+    settings->setAttribute(QWebSettings::DnsPrefetchEnabled, true);
+    settings->setAttribute(QWebSettings::PluginsEnabled, false);
+    settings->setAttribute(QWebSettings::JavascriptCanOpenWindows, true);
+    settings->setAttribute(QWebSettings::JavascriptCanAccessClipboard, true);
+    settings->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+    settings->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, true);
+    settings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, true);
+    settings->setAttribute(QWebSettings::LocalStorageEnabled, true);
+    settings->setAttribute(QWebSettings::AcceleratedCompositingEnabled, true);
+    QWebSettings::enablePersistentStorage();
 
     bool restoredTabs = m_window.restoreTabs();
     QUrl paramUrl = QUrl::fromUserInput(args);
