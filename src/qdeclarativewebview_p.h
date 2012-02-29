@@ -49,7 +49,8 @@ class QDeclarativeWebPage : public QWebPage {
 public:
     explicit QDeclarativeWebPage(QObject *parent);
     ~QDeclarativeWebPage();
-    void setOpenNextNavigationInNewWindow(bool enabled) { openNextNavigationInNewWindow = enabled; }
+    bool openNextNavigationInNewWindow() { return _openNextNavigationInNewWindow; }
+    void setOpenNextNavigationInNewWindow(bool enabled) { _openNextNavigationInNewWindow = enabled; }
 protected:
     QWebPage *createWindow(WebWindowType type);
     virtual QWebPage *createBackgroundWindow(WebWindowType type) { return createWindow(type); }
@@ -61,7 +62,7 @@ protected:
 
 private:
     QDeclarativeWebView *viewItem();
-    bool openNextNavigationInNewWindow;
+    bool _openNextNavigationInNewWindow;
 };
 
 class GraphicsWebView : public QGraphicsWebView {
@@ -71,6 +72,7 @@ public:
 protected:
     void hoverMoveEvent(QGraphicsSceneHoverEvent* event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 
 Q_SIGNALS:
     void doubleClick(int clickX, int clickY);

@@ -92,9 +92,20 @@ GraphicsWebView::GraphicsWebView(QDeclarativeWebView* parent)
 
 void GraphicsWebView::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    QGraphicsWebView::mousePressEvent(event);
     bool openInNewWindow = event->button() == Qt::MiddleButton || (event->button() == Qt::LeftButton && event->modifiers().testFlag(Qt::ControlModifier));
     static_cast<QDeclarativeWebPage*>(page())->setOpenNextNavigationInNewWindow(openInNewWindow);
+    // Evil: Some pages like twitter handle mouse clicks and won't send us navigation requests.
+    // Transform left clicks for those page, if they handle middle clicks as well then they are looking for trouble.
+    if (openInNewWindow && event->button() == Qt::LeftButton)
+        event->setButton(Qt::MiddleButton);
+    QGraphicsWebView::mousePressEvent(event);
+}
+
+void GraphicsWebView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    if (static_cast<QDeclarativeWebPage*>(page())->openNextNavigationInNewWindow() && event->button() == Qt::LeftButton)
+        event->setButton(Qt::MiddleButton);
+    QGraphicsWebView::mouseReleaseEvent(event);
 }
 
 /*!
@@ -829,7 +840,7 @@ QRect QDeclarativeWebView::elementAreaAt(int x, int y, int maxWidth, int maxHeig
 */
 QDeclarativeWebPage::QDeclarativeWebPage(QObject* parent)
     : QWebPage(parent)
-    , openNextNavigationInNewWindow(false)
+    , _openNextNavigationInNewWindow(false)
 {
 }
 
@@ -879,7 +890,7 @@ bool QDeclarativeWebPage::javaScriptPrompt(QWebFrame* originatingFrame, const QS
 
 bool QDeclarativeWebPage::acceptNavigationRequest(QWebFrame *, const QNetworkRequest &request, QWebPage::NavigationType type)
 {
-    if (type == QWebPage::NavigationTypeLinkClicked && openNextNavigationInNewWindow) {
+    if (type == QWebPage::NavigationTypeLinkClicked && _openNextNavigationInNewWindow) {
         createBackgroundWindow(WebBrowserWindow)->mainFrame()->load(request.url());
         return false;
     }
